@@ -214,7 +214,7 @@ def get_config():
     parser.add_argument("--save_gifs", action="store_true", default=False, help="默认不保存渲染视频；如果设置，则保存视频")
     parser.add_argument("--use_render", action="store_true", default=False, help="默认不在训练期间渲染环境；如果设置，则开始渲染")
     parser.add_argument("--render_episodes", type=int, default=5, help="渲染给定环境的episode数量")
-    parser.add_argument("--ifi", type=float, default=0.1, help="保存视频中每个渲染图像的播放间隔")
+    parser.add_argument("--ifi", type=float, default=0.2, help="保存视频中每个渲染图像的播放间隔")
     
     # 预训练参数
     parser.add_argument("--model_dir", type=str, default=None, help="默认None，设置预训练模型的路径")
