@@ -146,8 +146,8 @@ def get_config():
     parser.add_argument("--seed", type=int, default=1, help="numpy/torch的随机种子")
     parser.add_argument("--cuda", action="store_false", default=True, help="默认True，使用GPU训练；否则使用CPU")
     parser.add_argument("--cuda_deterministic", action="store_false", default=True, help="默认确保随机种子有效；如果设置，则绕过此功能")
-    parser.add_argument("--n_training_threads", type=int, default=2, help="训练的torch线程数")
-    parser.add_argument("--n_rollout_threads", type=int, default=5, help="用于训练rollout的并行环境数")
+    parser.add_argument("--n_training_threads", type=int, default=8, help="训练的torch线程数")
+    parser.add_argument("--n_rollout_threads", type=int, default=1, help="用于训练rollout的并行环境数")
     parser.add_argument("--n_eval_rollout_threads", type=int, default=2, help="用于评估rollout的并行环境数")
     parser.add_argument("--n_render_rollout_threads", type=int, default=1, help="用于渲染rollout的并行环境数")
     parser.add_argument("--num_env_steps", type=int, default=10e6, help="训练的环境步数（默认：10e6）")
@@ -157,14 +157,14 @@ def get_config():
     parser.add_argument("--use_obs_instead_of_state", action="store_true", default=False, help="是否使用全局状态或拼接的观察")
     
     # 回放缓冲区参数
-    parser.add_argument("--episode_length", type=int, default=200, help="任意episode的最大长度")
+    parser.add_argument("--episode_length", type=int, default=1000, help="任意episode的最大长度")
     
     # 网络参数
     parser.add_argument("--use_centralized_V", action="store_false", default=True, help="是否使用集中式V函数")
     parser.add_argument("--stacked_frames", type=int, default=1, help="堆叠的输入帧数量")
     parser.add_argument("--use_stacked_frames", action="store_true", default=False, help="是否使用堆叠帧")
-    parser.add_argument("--hidden_size", type=int, default=64, help="演员/评论家网络的隐藏层维度")
-    parser.add_argument("--layer_N", type=int, default=1, help="演员/评论家网络的层数")
+    parser.add_argument("--hidden_size", type=int, default=256, help="演员/评论家网络的隐藏层维度")
+    parser.add_argument("--layer_N", type=int, default=4, help="演员/评论家网络的层数")
     parser.add_argument("--use_ReLU", action="store_false", default=True, help="是否使用ReLU")
     parser.add_argument("--use_popart", action="store_true", default=False, help="默认False，使用PopArt归一化奖励")
     parser.add_argument("--use_valuenorm", action="store_false", default=True, help="默认True，使用运行均值和标准差归一化奖励")
@@ -200,15 +200,15 @@ def get_config():
     parser.add_argument("--use_linear_lr_decay", action="store_true", default=False, help="使用线性学习率调度")
     
     # 保存参数
-    parser.add_argument("--save_interval", type=int, default=1, help="连续两次模型保存之间的时间间隔")
+    parser.add_argument("--save_interval", type=int, default=20, help="连续两次模型保存之间的时间间隔")
     
     # 日志参数
-    parser.add_argument("--log_interval", type=int, default=5, help="连续两次日志打印之间的时间间隔")
+    parser.add_argument("--log_interval", type=int, default=10, help="连续两次日志打印之间的时间间隔")
     
     # 评估参数
     parser.add_argument("--use_eval", action="store_true", default=False, help="默认不启动评估；如果设置，则在训练的同时启动评估")
-    parser.add_argument("--eval_interval", type=int, default=25, help="连续两次评估之间的时间间隔")
-    parser.add_argument("--eval_episodes", type=int, default=32, help="单次评估的episode数量")
+    parser.add_argument("--eval_interval", type=int, default=50, help="连续两次评估之间的时间间隔")
+    parser.add_argument("--eval_episodes", type=int, default=50, help="单次评估的episode数量")
     
     # 渲染参数
     parser.add_argument("--save_gifs", action="store_true", default=False, help="默认不保存渲染视频；如果设置，则保存视频")
