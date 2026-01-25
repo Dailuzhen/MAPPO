@@ -146,7 +146,7 @@ def get_config():
     parser.add_argument("--seed", type=int, default=1, help="numpy/torch的随机种子")
     parser.add_argument("--cuda", action="store_false", default=True, help="默认True，使用GPU训练；否则使用CPU")
     parser.add_argument("--cuda_deterministic", action="store_false", default=True, help="默认确保随机种子有效；如果设置，则绕过此功能")
-    parser.add_argument("--n_training_threads", type=int, default=8, help="训练的torch线程数")
+    parser.add_argument("--n_training_threads", type=int, default=16, help="训练的torch线程数")
     parser.add_argument("--n_rollout_threads", type=int, default=1, help="用于训练rollout的并行环境数")
     parser.add_argument("--n_eval_rollout_threads", type=int, default=2, help="用于评估rollout的并行环境数")
     parser.add_argument("--n_render_rollout_threads", type=int, default=1, help="用于渲染rollout的并行环境数")
