@@ -65,7 +65,10 @@ class DummyVecEnv():
         # 执行所有环境的步进
         results = [env.step(a) for (a, env) in zip(self.actions, self.envs)]
         # 解包结果并转换为数组
-        obs, rews, dones, infos = map(np.array, zip(*results))
+        if len(results) > 0 and len(results[0]) == 5:
+            obs, _share_obs, rews, dones, infos = map(np.array, zip(*results))
+        else:
+            obs, rews, dones, infos = map(np.array, zip(*results))
 
         # 处理环境重置
         for i, done in enumerate(dones):
@@ -73,11 +76,17 @@ class DummyVecEnv():
             if isinstance(done, bool):
                 # 单智能体环境
                 if done:
-                    obs[i] = self.envs[i].reset()
+                    reset_out = self.envs[i].reset()
+                    if isinstance(reset_out, tuple) and len(reset_out) == 2:
+                        reset_out = reset_out[0]
+                    obs[i] = reset_out
             else:
                 # 多智能体环境，所有智能体都终止时才重置
                 if np.all(done):
-                    obs[i] = self.envs[i].reset()
+                    reset_out = self.envs[i].reset()
+                    if isinstance(reset_out, tuple) and len(reset_out) == 2:
+                        reset_out = reset_out[0]
+                    obs[i] = reset_out
 
         self.actions = None  # 清空动作缓存
         return obs, rews, dones, infos
@@ -89,6 +98,8 @@ class DummyVecEnv():
             obs: 观察数组，形状为 [env_num, agent_num, obs_dim]
         """
         obs = [env.reset() for env in self.envs]
+        if len(obs) > 0 and isinstance(obs[0], tuple) and len(obs[0]) == 2:
+            obs = [o[0] for o in obs]
         return np.array(obs)
 
     def close(self):
