@@ -146,7 +146,7 @@ def get_config():
     parser.add_argument("--seed", type=int, default=1, help="numpy/torch的随机种子")
     parser.add_argument("--cuda", action="store_false", default=True, help="默认True，使用GPU训练；否则使用CPU")
     parser.add_argument("--cuda_deterministic", action="store_false", default=True, help="默认确保随机种子有效；如果设置，则绕过此功能")
-    parser.add_argument("--n_training_threads", type=int, default=16, help="训练的torch线程数")
+    parser.add_argument("--n_training_threads", type=int, default=8, help="训练的torch线程数")
     parser.add_argument("--n_rollout_threads", type=int, default=1, help="用于训练rollout的并行环境数")
     parser.add_argument("--n_eval_rollout_threads", type=int, default=2, help="用于评估rollout的并行环境数")
     parser.add_argument("--n_render_rollout_threads", type=int, default=1, help="用于渲染rollout的并行环境数")
@@ -163,7 +163,7 @@ def get_config():
     parser.add_argument("--use_centralized_V", action="store_false", default=True, help="是否使用集中式V函数")
     parser.add_argument("--stacked_frames", type=int, default=1, help="堆叠的输入帧数量")
     parser.add_argument("--use_stacked_frames", action="store_true", default=False, help="是否使用堆叠帧")
-    parser.add_argument("--hidden_size", type=int, default=256, help="演员/评论家网络的隐藏层维度")
+    parser.add_argument("--hidden_size", type=int, default=128, help="演员/评论家网络的隐藏层维度")
     parser.add_argument("--layer_N", type=int, default=4, help="演员/评论家网络的层数")
     parser.add_argument("--use_ReLU", action="store_false", default=True, help="是否使用ReLU")
     parser.add_argument("--use_popart", action="store_true", default=False, help="默认False，使用PopArt归一化奖励")
@@ -182,7 +182,7 @@ def get_config():
     parser.add_argument("--ppo_epoch", type=int, default=20, help="ppo训练轮数（默认：15）")
     parser.add_argument("--use_clipped_value_loss", action="store_false", default=True, help="默认裁剪价值损失；如果设置，则不裁剪")
     parser.add_argument("--clip_param", type=float, default=0.2, help="ppo裁剪参数（默认：0.2）")
-    parser.add_argument("--num_mini_batch", type=int, default=8, help="ppo的批次数（默认：1）")
+    parser.add_argument("--num_mini_batch", type=int, default=128, help="ppo的批次数（默认：1）")
     parser.add_argument("--entropy_coef", type=float, default=0.01, help="熵项系数（默认：0.01）")
     parser.add_argument("--value_loss_coef", type=float, default=1, help="价值损失系数（默认：1）")
     parser.add_argument("--use_max_grad_norm", action="store_false", default=True, help="默认使用梯度最大范数；如果设置，则不使用")
@@ -206,15 +206,62 @@ def get_config():
     parser.add_argument("--log_interval", type=int, default=10, help="连续两次日志打印之间的时间间隔")
     
     # 评估参数
-    parser.add_argument("--use_eval", action="store_true", default=False, help="默认不启动评估；如果设置，则在训练的同时启动评估")
+    parser.add_argument("--use_eval", action="store_true", default=True, help="默认启动评估；如果设置，则在训练的同时启动评估")
     parser.add_argument("--eval_interval", type=int, default=50, help="连续两次评估之间的时间间隔")
     parser.add_argument("--eval_episodes", type=int, default=50, help="单次评估的episode数量")
+
+    # A* 行为克隆参数（旧版，保留兼容）
+    parser.add_argument("--use_astar_bc", action="store_true", default=True, help="是否在PPO训练前使用A*轨迹进行行为克隆初始化")
+    parser.add_argument("--astar_bc_updates", type=int, default=20, help="A*行为克隆的优化步数")
+    
+    # ============= 两阶段训练参数 =============
+    # 训练模式选择
+    parser.add_argument("--training_mode", type=str, default="two_phase", 
+                        choices=["two_phase", "phase_a_only", "phase_b_only", "legacy"],
+                        help="训练模式: two_phase(完整两阶段), phase_a_only(仅Phase A), phase_b_only(仅Phase B), legacy(旧版)")
+    
+    # Phase A 参数（A* 在线学习）
+    parser.add_argument("--phase_a_episodes", type=int, default=100,
+                        help="Phase A: A*在线学习的episode数")
+    parser.add_argument("--phase_a_checkpoint_interval", type=int, default=10,
+                        help="Phase A: checkpoint保存和对比间隔")
+    parser.add_argument("--phase_a_bc_lr", type=float, default=3e-4,
+                        help="Phase A: BC学习率（偏低更稳，避免后期崩溃）")
+    parser.add_argument("--bc_updates_per_episode", type=int, default=10,
+                        help="Phase A: 每批次最少BC梯度更新次数")
+    parser.add_argument("--bc_max_updates_per_batch", type=int, default=30,
+                        help="Phase A: 每批次BC更新次数上限（防灾难性遗忘）")
+    parser.add_argument("--bc_batch_size", type=int, default=256,
+                        help="Phase A: BC mini-batch大小")
+    parser.add_argument("--max_replay_buffer_size", type=int, default=50000,
+                        help="Phase A: Replay buffer 上限，超出 FIFO 丢弃（防分布偏移）")
+    parser.add_argument("--bc_entropy_coef", type=float, default=0.01,
+                        help="Phase A: BC 熵正则系数（防策略塌缩）")
+    parser.add_argument("--bc_weight_decay", type=float, default=1e-4,
+                        help="Phase A: BC 优化器 L2 正则")
+    
+    # Phase B 参数（纯策略 PPO 训练）
+    parser.add_argument("--phase_b_episodes", type=int, default=900,
+                        help="Phase B: 纯策略PPO训练的episode数")
+    parser.add_argument("--phase_b_render_interval", type=int, default=100,
+                        help="Phase B: 渲染gif的间隔")
+    
+    # 对比评估参数
+    parser.add_argument("--comparison_max_steps", type=int, default=100,
+                        help="策略推理单个segment的最大步数")
+    parser.add_argument("--comparison_segments", type=int, default=20,
+                        help="checkpoint对比时随机选择的segment数量")
     
     # 渲染参数
     parser.add_argument("--save_gifs", action="store_true", default=False, help="默认不保存渲染视频；如果设置，则保存视频")
     parser.add_argument("--use_render", action="store_true", default=False, help="默认不在训练期间渲染环境；如果设置，则开始渲染")
     parser.add_argument("--render_episodes", type=int, default=5, help="渲染给定环境的episode数量")
     parser.add_argument("--ifi", type=float, default=0.1, help="保存视频中每个渲染图像的播放间隔")
+    parser.add_argument("--render_run", type=str, default=None, help="渲染时使用的run目录（例如 run2）")
+    parser.add_argument("--gif_dir", type=str, default="renders/gifs", help="GIF保存目录（相对于run_dir或绝对路径）")
+    parser.add_argument("--gif_fps", type=float, default=10.0, help="GIF帧率（每秒帧数）")
+    parser.add_argument("--save_frames", action="store_true", default=False, help="是否逐帧保存渲染图像")
+    parser.add_argument("--frames_dir", type=str, default="renders/frames", help="逐帧图片保存目录（相对于run_dir或绝对路径）")
     
     # 预训练参数
     parser.add_argument("--model_dir", type=str, default=None, help="默认None，设置预训练模型的路径")
