@@ -22,45 +22,41 @@ from envs.env_wrappers import DummyVecEnv
 
 
 def make_env(all_args):
-    """创建向量环境（方案A：所有并行环境使用同一张地图，保证训练与对比评估地图一致）
-    
-    Args:
-        all_args: 配置参数
-    
-    Returns:
-        向量环境实例
-    """
-    # v8: 获取观测增强参数
-    obs_include_goal_direction = getattr(all_args, 'obs_include_goal_direction', True)
-    obs_include_position = getattr(all_args, 'obs_include_position', True)
-    
-    # 先创建单个环境得到一张随机地图，再复制给所有并行环境，避免各环境地图不一致导致对比评估失败
-    from envs.env import Env
-    _temp_env = Env(
-        max_episode_steps=all_args.episode_length,
-        obs_include_goal_direction=obs_include_goal_direction,
-        obs_include_position=obs_include_position,
-    )
-    _temp_env.seed(all_args.seed)
-    shared_map = _temp_env.map.copy()
-    del _temp_env
+    """创建向量环境（v9：支持访问历史、PBRS、奖励缩放）"""
+    obs_include_goal_direction = getattr(all_args, 'obs_include_goal_direction', False)
+    obs_include_position = getattr(all_args, 'obs_include_position', False)
+    obs_include_visit_history = getattr(all_args, 'obs_include_visit_history', False)
+    visit_history_length = getattr(all_args, 'visit_history_length', 20)
+    use_pbrs = getattr(all_args, 'use_pbrs', False)
+    scale_reward_by_size = getattr(all_args, 'scale_reward_by_size', False)
+    use_first_reach_reward = getattr(all_args, 'use_first_reach_reward', False)
+    use_wall_penalty = getattr(all_args, 'use_wall_penalty', False)
+    map_size_min = getattr(all_args, 'map_size_min', 8)
+    map_size_max = getattr(all_args, 'map_size_max', 20)
+    map_change_interval = getattr(all_args, 'map_change_interval', 5)
+    obs_radius = getattr(all_args, 'obs_radius', 2)
 
     def get_env_fn(rank):
-        """获取环境构造函数（每个环境使用同一张 shared_map）"""
         def init_env():
             from envs.env import Env
             env = Env(
                 max_episode_steps=all_args.episode_length,
-                shared_map=shared_map,
+                size_range=(map_size_min, map_size_max),
+                map_change_interval=map_change_interval,
                 obs_include_goal_direction=obs_include_goal_direction,
                 obs_include_position=obs_include_position,
+                obs_include_visit_history=obs_include_visit_history,
+                visit_history_length=visit_history_length,
+                use_pbrs=use_pbrs,
+                scale_reward_by_size=scale_reward_by_size,
+                use_first_reach_reward=use_first_reach_reward,
+                use_wall_penalty=use_wall_penalty,
+                obs_radius=obs_radius,
             )
             env.seed(all_args.seed + rank * 1000)
             return env
-
         return init_env
 
-    # 创建向量环境，包含 n_rollout_threads 个环境实例，地图一致
     return DummyVecEnv([get_env_fn(i) for i in range(all_args.n_rollout_threads)])
 
 
@@ -124,7 +120,10 @@ def main(args):
         os.makedirs(str(run_dir))
 
     # 确定当前运行编号
-    if all_args.use_render and all_args.render_run is not None:
+    if getattr(all_args, 'resume_run', None) is not None:
+        curr_run = all_args.resume_run
+        print(f"[断点续训] 复用已有目录: {curr_run}")
+    elif all_args.use_render and all_args.render_run is not None:
         curr_run = all_args.render_run
     else:
         if not run_dir.exists():

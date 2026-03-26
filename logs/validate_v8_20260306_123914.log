@@ -1,0 +1,100 @@
+Device: cuda:0
+Checkpoints: [250, 500, 700, 1350, 1650, 1800]
+Map sizes: [8, 10, 12, 14, 16, 18, 20, 22]
+Scenarios per size: 20
+Total scenarios per model: 160
+obs_radius: 3
+A* disabled: use_astar_first_episode=False, use_astar_shaping=False
+
+======================================================================
+  Checkpoint ep250
+======================================================================
+   8x8 :  65.0% (13/20)  ratio=1.00x  timeout=7  collision=2
+  10x10:  70.0% (14/20)  ratio=1.01x  timeout=6  collision=2
+  12x12:  65.0% (13/20)  ratio=1.01x  timeout=7  collision=1
+  14x14:  75.0% (15/20)  ratio=1.01x  timeout=5  collision=3
+  16x16:  65.0% (13/20)  ratio=1.02x  timeout=7  collision=0
+  18x18:  50.0% (10/20)  ratio=1.01x  timeout=10  collision=0
+  20x20:  60.0% (12/20)  ratio=1.01x  timeout=8  collision=1
+  22x22:  50.0% (10/20)  ratio=1.02x  timeout=10  collision=0
+     综合:  62.5% (100/160)
+
+======================================================================
+  Checkpoint ep500
+======================================================================
+   8x8 :  80.0% (16/20)  ratio=1.02x  timeout=4  collision=3
+  10x10:  60.0% (12/20)  ratio=1.04x  timeout=8  collision=3
+  12x12:  80.0% (16/20)  ratio=1.02x  timeout=4  collision=2
+  14x14:  85.0% (17/20)  ratio=1.01x  timeout=3  collision=1 ***
+  16x16:  60.0% (12/20)  ratio=1.08x  timeout=8  collision=0
+  18x18:  55.0% (11/20)  ratio=1.04x  timeout=9  collision=4
+  20x20:  70.0% (14/20)  ratio=1.02x  timeout=6  collision=2
+  22x22:  55.0% (11/20)  ratio=1.06x  timeout=9  collision=0
+     综合:  68.1% (109/160)
+
+======================================================================
+  Checkpoint ep700
+======================================================================
+   8x8 :  80.0% (16/20)  ratio=1.02x  timeout=4  collision=2
+  10x10:  75.0% (15/20)  ratio=1.03x  timeout=5  collision=0
+  12x12:  60.0% (12/20)  ratio=1.00x  timeout=8  collision=1
+  14x14:  50.0% (10/20)  ratio=1.02x  timeout=10  collision=2
+  16x16:  80.0% (16/20)  ratio=1.03x  timeout=4  collision=0
+  18x18:  55.0% (11/20)  ratio=1.04x  timeout=9  collision=3
+  20x20:  55.0% (11/20)  ratio=1.00x  timeout=9  collision=0
+  22x22:  70.0% (14/20)  ratio=1.01x  timeout=6  collision=1
+     综合:  65.6% (105/160)
+
+======================================================================
+  Checkpoint ep1350
+======================================================================
+   8x8 :  95.0% (19/20)  ratio=1.06x  timeout=1  collision=3 ***
+  10x10:  90.0% (18/20)  ratio=1.03x  timeout=2  collision=2 ***
+  12x12:  55.0% (11/20)  ratio=1.00x  timeout=9  collision=0
+  14x14:  70.0% (14/20)  ratio=1.01x  timeout=6  collision=0
+  16x16:  65.0% (13/20)  ratio=1.00x  timeout=7  collision=0
+  18x18:  75.0% (15/20)  ratio=1.01x  timeout=5  collision=0
+  20x20:  90.0% (18/20)  ratio=1.01x  timeout=2  collision=2 ***
+  22x22:  50.0% (10/20)  ratio=1.05x  timeout=10  collision=184
+     综合:  73.8% (118/160)
+
+======================================================================
+  Checkpoint ep1650
+======================================================================
+   8x8 :  60.0% (12/20)  ratio=1.04x  timeout=8  collision=0
+  10x10:  85.0% (17/20)  ratio=1.00x  timeout=3  collision=0 ***
+  12x12:  80.0% (16/20)  ratio=1.04x  timeout=4  collision=0
+  14x14:  75.0% (15/20)  ratio=1.01x  timeout=5  collision=1
+  16x16:  70.0% (14/20)  ratio=1.04x  timeout=6  collision=0
+  18x18:  75.0% (15/20)  ratio=1.05x  timeout=5  collision=1
+  20x20:  65.0% (13/20)  ratio=1.04x  timeout=7  collision=2
+  22x22:  55.0% (11/20)  ratio=1.03x  timeout=9  collision=1
+     综合:  70.6% (113/160)
+
+======================================================================
+  Checkpoint ep1800
+======================================================================
+   8x8 :  85.0% (17/20)  ratio=1.01x  timeout=3  collision=2 ***
+  10x10:  80.0% (16/20)  ratio=1.03x  timeout=4  collision=1
+  12x12:  75.0% (15/20)  ratio=1.00x  timeout=5  collision=5
+  14x14:  60.0% (12/20)  ratio=1.00x  timeout=8  collision=2
+  16x16:  80.0% (16/20)  ratio=1.10x  timeout=4  collision=2
+  18x18:  80.0% (16/20)  ratio=1.03x  timeout=4  collision=2
+  20x20:  70.0% (14/20)  ratio=1.01x  timeout=6  collision=2
+  22x22:  50.0% (10/20)  ratio=1.02x  timeout=10  collision=4
+     综合:  72.5% (116/160)
+
+结果已保存: results/MyEnv/MyEnv/full_v8/run1/phase_b_ppo/validation_results.json
+
+======================================================================
+  汇总对比表
+======================================================================
+   Model  8x 8  10x10  12x12  14x14  16x16  18x18  20x20  22x22    综合
+---------------------------------------------------------------------
+ep  250   65.0%   70.0%   65.0%   75.0%   65.0%   50.0%   60.0%   50.0%   62.5%
+ep  500   80.0%   60.0%   80.0%   85.0%   60.0%   55.0%   70.0%   55.0%   68.1%
+ep  700   80.0%   75.0%   60.0%   50.0%   80.0%   55.0%   55.0%   70.0%   65.6%
+ep 1350   95.0%   90.0%   55.0%   70.0%   65.0%   75.0%   90.0%   50.0%   73.8%
+ep 1650   60.0%   85.0%   80.0%   75.0%   70.0%   75.0%   65.0%   55.0%   70.6%
+ep 1800   85.0%   80.0%   75.0%   60.0%   80.0%   80.0%   70.0%   50.0%   72.5%
+

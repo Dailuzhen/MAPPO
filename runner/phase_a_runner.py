@@ -138,8 +138,8 @@ class PhaseARunner:
         self.bc_batch_size = getattr(self.all_args, 'bc_batch_size', 256)
         self.comparison_segments_per_ep = getattr(self.all_args, 'comparison_segments_per_ep', 10)
         self.max_history_episodes = getattr(self.all_args, 'max_history_episodes', 20)
-        self.astar_step_multiplier = getattr(self.all_args, 'astar_step_multiplier', 3.0)
-        self.episode_length = self.all_args.episode_length
+        self.astar_step_multiplier = getattr(self.all_args, 'astar_step_multiplier', 5.0)
+        self.episode_length = max(self.all_args.episode_length, 1000)
         self.gif_fps = getattr(self.all_args, 'gif_fps', 10.0)
         self.save_frames = getattr(self.all_args, 'save_frames', False)
         
@@ -170,17 +170,66 @@ class PhaseARunner:
         else:
             self.replay_buffer = None
     
+    def _try_resume(self):
+        """
+        尝试从已有 checkpoint 恢复训练。
+        返回起始 episode 编号（从 1 开始），如无可恢复的则返回 1。
+        """
+        episodes_dir = self.dirs["episodes"]
+        if not episodes_dir.exists():
+            return 1
+        
+        existing_eps = sorted([
+            int(d.name.replace("ep_", ""))
+            for d in episodes_dir.iterdir()
+            if d.is_dir() and d.name.startswith("ep_")
+        ])
+        if not existing_eps:
+            return 1
+        
+        last_ep = existing_eps[-1]
+        
+        # 找到最近的 checkpoint（模型文件）
+        checkpoint_ep = (last_ep // 10) * 10
+        if checkpoint_ep == 0:
+            checkpoint_ep = 10 if last_ep >= 10 else 0
+        
+        if checkpoint_ep > 0:
+            ckpt_dir = get_checkpoint_dir(self.dirs["phase_a_root"], checkpoint_ep)
+            model_path = ckpt_dir / "models" / "actor.pt"
+            if model_path.exists():
+                self.policy.actor.load_state_dict(
+                    torch.load(str(model_path), map_location=self.device)
+                )
+                critic_path = ckpt_dir / "models" / "critic.pt"
+                if critic_path.exists():
+                    self.policy.critic.load_state_dict(
+                        torch.load(str(critic_path), map_location=self.device)
+                    )
+                print(f"[Phase A] 从 checkpoint ep{checkpoint_ep} 恢复模型")
+            
+            # 尝试恢复优化器状态
+            optim_path = ckpt_dir / "models" / "bc_optimizer.pt"
+            if optim_path.exists():
+                self.bc_optimizer.load_state_dict(
+                    torch.load(str(optim_path), map_location=self.device)
+                )
+                print(f"[Phase A] 恢复 BC 优化器状态")
+        
+        resume_ep = last_ep + 1
+        print(f"[Phase A] 跳过已有 {last_ep} 个 episodes, 从 Episode {resume_ep} 继续训练")
+        return resume_ep
+    
     def run(self):
         """
-        运行 Phase A 主循环（v3：单环境，每回合 BC）
-        
-        Returns:
-            bool: 是否成功完成
+        运行 Phase A 主循环（支持断点续训）
         """
         print_phase_a_header()
         start_time = time.time()
         
-        for ep in range(1, self.phase_a_episodes + 1):
+        start_ep = self._try_resume()
+        
+        for ep in range(start_ep, self.phase_a_episodes + 1):
             print_episode_header(ep, self.phase_a_episodes)
             episode_data = self._run_astar_episode(ep)
             self._save_episode_data(ep, episode_data)
@@ -188,7 +237,6 @@ class PhaseARunner:
             self.all_bc_losses.append(bc_info['avg_loss'])
             self.all_bc_accuracies.append(bc_info['accuracy'])
             self._log_episode_metrics(ep, episode_data, bc_info)
-            # v8: 显示经验池状态
             buffer_info = ""
             if self.use_replay_buffer and self.replay_buffer:
                 buffer_stats = self.replay_buffer.get_stats()
@@ -198,8 +246,8 @@ class PhaseARunner:
                   f"Steps: {episode_data['total_steps']}, "
                   f"BC Loss: {bc_info['avg_loss']:.4f}, "
                   f"Accuracy: {bc_info['accuracy']:.2%}{buffer_info}")
-            # v6: 每回合都保存模型并进行对比
-            self._save_checkpoint_and_compare(ep)
+            if ep % 10 == 0 or ep == self.phase_a_episodes:
+                self._save_checkpoint_and_compare(ep)
         
         elapsed = time.time() - start_time
         print(f"\n[Phase A] 完成! 总耗时: {elapsed/60:.1f} 分钟")
@@ -207,18 +255,35 @@ class PhaseARunner:
         return True
     
     def _run_astar_episode(self, episode_num):
-        """执行单个 A* Episode（单环境 envs.envs[0]）"""
+        """执行单个 A* Episode（单环境 envs.envs[0]，每回合切换地图）"""
+        import random as _rnd
         env = self.envs.envs[0]
+
+        map_size_min = getattr(self.all_args, 'map_size_min', 8)
+        map_size_max = getattr(self.all_args, 'map_size_max', 20)
+        new_size = _rnd.randint(map_size_min, map_size_max)
+        env.rebuild_map_new_size(new_size)
+
         original_astar_flag = env.use_astar_first_episode
+        original_max_steps = env.max_episode_steps
         env.use_astar_first_episode = True
+        env.max_episode_steps = self.episode_length
         obs, share_obs = env.reset()
         episode_data = {"episode": episode_num, "map_size": env.grid_size, "segments": []}
         total_steps = 0
         segment_id = 1
+        skip_count = 0
+        max_consecutive_skips = 10
         while total_steps < self.episode_length:
             segment_data = self._collect_segment(env, obs, segment_id, total_steps)
             if segment_data is None:
-                break
+                skip_count += 1
+                if skip_count >= max_consecutive_skips:
+                    print(f"    [WARN] 连续 {skip_count} 个 segment 失败，结束本 episode")
+                    break
+                obs = np.stack([env._get_local_obs(i) for i in range(env.agent_num)])
+                continue
+            skip_count = 0
             episode_data["segments"].append(segment_data)
             total_steps = segment_data["end_step"]
             print(f"    Segment {segment_id}: {segment_data['astar_steps']} steps "
@@ -228,6 +293,7 @@ class PhaseARunner:
         episode_data["total_steps"] = total_steps
         episode_data["total_segments"] = len(episode_data["segments"])
         env.use_astar_first_episode = original_astar_flag
+        env.max_episode_steps = original_max_steps
         return episode_data
     
     def _bc_update(self, episode_data):
@@ -346,11 +412,17 @@ class PhaseARunner:
                 "goal": list(env.goals_pos[i])
             })
         
+        # 预估A*最优步数作为上限参考（防止卡死）
+        max_segment_steps = min(150, self.episode_length - start_step)
+        
         obs = init_obs
         current_step = start_step
         segment_done = False
+        segment_steps = 0
+        prev_positions = None
+        stuck_count = 0
         
-        while not segment_done and current_step < self.episode_length:
+        while not segment_done and current_step < self.episode_length and segment_steps < max_segment_steps:
             # 渲染当前帧
             frame = env.render(mode="rgb_array")
             segment_data["frames"].append(frame)
@@ -358,23 +430,47 @@ class PhaseARunner:
             # 获取 A* 动作
             actions = [env._action_from_path(i) for i in range(env.agent_num)]
             
+            # 检测是否所有智能体都选择 stay(0) — A* 无路可走
+            if all(a == 0 for a in actions) and not all(
+                env.agents_pos[i] == env.goals_pos[i] for i in range(env.agent_num)
+            ):
+                # A* 无法找到路径，跳过此 segment 并触发重新生成
+                env._regenerate_start_goal()
+                return None
+            
             # 记录训练数据
             segment_data["obs_list"].append(obs.copy())
             segment_data["act_list"].append(actions.copy())
             
+            # 检测位置卡住（连续不动）
+            curr_positions = list(env.agents_pos)
+            if curr_positions == prev_positions:
+                stuck_count += 1
+                if stuck_count >= 10:
+                    env._regenerate_start_goal()
+                    return None
+            else:
+                stuck_count = 0
+            prev_positions = curr_positions
+            
             # 执行动作
             obs, share_obs, rewards, dones, info = env.step(actions)
             current_step += 1
+            segment_steps += 1
             
             # 检查是否完成 segment
-            if info.get("looped_to_start", False):
+            if info.get("all_goals_reached", False) or info.get("looped_to_start", False):
                 segment_done = True
-                # 渲染最终帧
                 final_frame = env.render(mode="rgb_array")
                 segment_data["frames"].append(final_frame)
         
+        if not segment_done:
+            # segment 超时，强制重新生成起终点
+            env._regenerate_start_goal()
+            return None
+        
         segment_data["end_step"] = current_step
-        segment_data["astar_steps"] = current_step - start_step
+        segment_data["astar_steps"] = segment_steps
         
         return segment_data
     
@@ -397,6 +493,10 @@ class PhaseARunner:
             episode_data["segments"]
         )
         save_json(scene_config, ep_dir / "scene_config.json")
+
+        # 保存地图（Phase B 评估需要）
+        env = self.envs.envs[0]
+        np.save(str(ep_dir / "map.npy"), env.map)
         
         # 保存 A* 渲染 GIF
         for seg in episode_data["segments"]:
@@ -413,20 +513,12 @@ class PhaseARunner:
                 save_frames_to_dir(seg["frames"], frames_dir)
     
     def _save_checkpoint_and_compare(self, current_ep):
-        """
-        保存模型并进行策略对比评估（v6：每回合执行）
-        
-        Args:
-            current_ep: 当前 episode 编号
-        """
+        """保存模型并进行策略对比评估（纯数据版）"""
         checkpoint_dir = get_checkpoint_dir(self.dirs["phase_a_root"], current_ep)
         models_dir = checkpoint_dir / "models"
-        comparison_dir = checkpoint_dir / "comparison"
         
         models_dir.mkdir(parents=True, exist_ok=True)
-        comparison_dir.mkdir(parents=True, exist_ok=True)
         
-        # 保存模型
         torch.save(
             self.policy.actor.state_dict(),
             str(models_dir / "actor.pt")
@@ -435,46 +527,44 @@ class PhaseARunner:
             self.policy.critic.state_dict(),
             str(models_dir / "critic.pt")
         )
+        torch.save(
+            self.bc_optimizer.state_dict(),
+            str(models_dir / "bc_optimizer.pt")
+        )
         print(f"  模型已保存: {models_dir}")
         
-        # 策略推理对比：对每个历史回合进行对比
-        comparison_results = self._run_policy_comparison_all_episodes(current_ep, comparison_dir)
+        comparison_results = self._run_policy_comparison_all_episodes(current_ep, checkpoint_dir)
         
-        # 生成并保存 summary
-        summary = self._generate_comparison_summary(current_ep, comparison_results)
-        save_json(summary, comparison_dir / "summary.json")
+        # 保存评估结果 JSON
+        save_json(comparison_results, checkpoint_dir / "eval_results.json")
         
         # 记录到 TensorBoard
         self._log_comparison_metrics(current_ep, comparison_results)
         
-        # 打印对比结果
+        # 打印汇总表格
         self._print_comparison_results(current_ep, comparison_results)
     
     def _run_policy_comparison_all_episodes(self, current_ep, comparison_dir):
         """
-        对所有历史回合进行策略对比（v6：每个回合单独对比）
-        
-        Args:
-            current_ep: 当前 episode 编号
-            comparison_dir: 对比结果保存目录
-            
-        Returns:
-            comparison_results: 每个回合的对比结果字典
+        对所有历史回合进行策略对比（纯数据版，无 GIF）
+        每个 episode 取 10 个 segment，使用原始地图和场景进行对比。
         """
         import random
         
         env = self.envs.envs[0]
         
-        # 确定要对比的回合范围
         start_ep = max(1, current_ep - self.max_history_episodes + 1)
         episodes_to_compare = list(range(start_ep, current_ep + 1))
+        total_segments = len(episodes_to_compare) * self.comparison_segments_per_ep
         
-        print(f"\n  策略对比评估（判定规则: 步数 ≤ A*×{self.astar_step_multiplier}）")
+        print(f"\n  策略对比评估（限制: A*×{self.astar_step_multiplier}, "
+              f"共 {len(episodes_to_compare)} 回合 × {self.comparison_segments_per_ep} segments）")
         
         comparison_results = {}
+        grand_reached = 0
+        grand_total = 0
         
         for ep in episodes_to_compare:
-            # 获取该回合的所有 segment
             ep_dir = get_episode_dir(self.dirs["episodes"], ep)
             scene_config_path = ep_dir / "scene_config.json"
             
@@ -484,65 +574,44 @@ class PhaseARunner:
             scene_config = load_json(scene_config_path)
             all_segments = scene_config["segments"]
             
-            # 随机选择 N 个 segment（不足则全部使用）
+            # 加载该回合对应的地图
+            map_path = ep_dir / "map.npy"
+            if map_path.exists():
+                saved_map = np.load(str(map_path))
+                env.grid_size = saved_map.shape[0]
+                env.map = saved_map
+            
             n_compare = min(self.comparison_segments_per_ep, len(all_segments))
             selected_segments = random.sample(all_segments, n_compare)
             
-            # 创建该回合的对比目录
-            ep_comparison_dir = comparison_dir / f"test_ep{ep:03d}"
-            ep_comparison_dir.mkdir(parents=True, exist_ok=True)
-            
-            # 对每个 segment 进行策略推理
             reached_count = 0
             timeout_count = 0
             collision_count = 0
-            total_astar_steps = 0
-            total_policy_steps = 0
             step_ratios = []
             
-            segment_details = []
-            
             for seg_config in selected_segments:
-                seg_id = seg_config["segment_id"]
                 astar_steps = seg_config["astar_steps"]
                 max_allowed_steps = int(astar_steps * self.astar_step_multiplier)
                 
-                # 策略推理
                 seg_result = self._infer_segment_with_limit(env, seg_config, max_allowed_steps)
-                
-                # 统计
-                total_astar_steps += astar_steps
                 
                 if seg_result["reached"]:
                     reached_count += 1
-                    total_policy_steps += seg_result["steps"]
                     step_ratios.append(seg_result["steps"] / astar_steps)
-                
                 if seg_result["timeout"]:
                     timeout_count += 1
                 if seg_result["collision"]:
                     collision_count += 1
-                
-                # 保存对比 GIF
-                seg_gif_path = ep_comparison_dir / f"seg{seg_id:03d}_compare.gif"
-                self._generate_segment_comparison_gif(
-                    ep, ep_dir, seg_config, seg_result, seg_gif_path
-                )
-                
-                # 记录详情
-                segment_details.append({
-                    "segment_id": seg_id,
-                    "astar_steps": astar_steps,
-                    "policy_steps": seg_result["steps"],
-                    "reached": seg_result["reached"],
-                    "timeout": seg_result["timeout"],
-                    "collision": seg_result["collision"],
-                    "step_ratio": seg_result["steps"] / astar_steps if seg_result["reached"] else None
-                })
             
-            # 计算该回合的统计数据
             reach_rate = reached_count / n_compare if n_compare > 0 else 0
             avg_step_ratio = np.mean(step_ratios) if step_ratios else 0
+            
+            grand_reached += reached_count
+            grand_total += n_compare
+            
+            print(f"    ep{ep:<3d}: {reached_count}/{n_compare} ({reach_rate:.0%})  "
+                  f"avg_ratio={avg_step_ratio:.2f}x  "
+                  f"(map:{env.grid_size}x{env.grid_size})")
             
             comparison_results[f"ep{ep:03d}"] = {
                 "episode": ep,
@@ -552,8 +621,11 @@ class PhaseARunner:
                 "collision": collision_count,
                 "reach_rate": reach_rate,
                 "avg_step_ratio": avg_step_ratio,
-                "segment_details": segment_details
             }
+        
+        grand_rate = grand_reached / grand_total if grand_total > 0 else 0
+        print(f"  ────────────────────────────────────")
+        print(f"  总计: {grand_reached}/{grand_total} ({grand_rate:.1%})")
         
         return comparison_results
     
@@ -703,47 +775,33 @@ class PhaseARunner:
     
     def _infer_segment_with_limit(self, env, seg_config, max_steps):
         """
-        使用策略推理单个 Segment（v6：带步数限制）
-        
-        Args:
-            env: 环境实例
-            seg_config: Segment 配置
-            max_steps: 最大允许步数（A* 步数 × 倍数）
-            
-        Returns:
-            result: 包含 frames, steps, reached, timeout, collision 的字典
+        使用策略推理单个 Segment（纯数据版，无渲染）
         """
-        # 设置环境到指定场景
+        saved_astar_flag = env.use_astar_first_episode
+        env.use_astar_first_episode = False
+        env._stuck_counter = 0
+        
         starts = [tuple(a["start"]) for a in seg_config["agents"]]
         goals = [tuple(a["goal"]) for a in seg_config["agents"]]
         
         env.set_start_goal(starts, goals)
         obs = env.reset_to_segment(seg_config)
         
-        # 保存目标位置
         target_goals = list(goals)
-        
-        frames = []
         steps = 0
         reached = False
         timeout = False
         collision = False
         
-        # 渲染初始帧
-        frame = env.render(mode="rgb_array")
-        frames.append(frame)
-        
         for step in range(max_steps):
-            # 检查是否全部到达目标
-            all_reached = all(
+            all_at_goal = all(
                 env.agents_pos[i] == target_goals[i]
                 for i in range(env.agent_num)
             )
-            if all_reached:
+            if all_at_goal:
                 reached = True
                 break
             
-            # 策略推理
             self.trainer.prep_rollout()
             obs_tensor = torch.tensor(
                 obs.reshape(-1, obs.shape[-1]),
@@ -753,32 +811,26 @@ class PhaseARunner:
             action = self.policy.act(obs_tensor, deterministic=True)
             actions = action.cpu().numpy().flatten().tolist()
             
-            # 执行动作
             obs, share_obs, rewards, dones, info = env.step(actions)
             steps += 1
             
-            # 检查碰撞
             if any(info.get("collision", [])):
                 collision = True
             
-            # 检查是否到达终点
-            if info.get("looped_to_start", False):
+            if info.get("all_goals_reached", False):
                 reached = True
                 break
             
-            # 渲染当前帧
-            frame = env.render(mode="rgb_array")
-            frames.append(frame)
-        
-        # 添加最终帧
-        final_frame = env.render(mode="rgb_array")
-        frames.append(final_frame)
+            # 卡住重置但非真正到达 → 目标已被篡改，视为失败
+            if info.get("looped_to_start", False) and not info.get("all_goals_reached", False):
+                break
         
         if not reached:
             timeout = True
         
+        env.use_astar_first_episode = saved_astar_flag
+        
         return {
-            "frames": frames,
             "steps": steps,
             "reached": reached,
             "timeout": timeout,

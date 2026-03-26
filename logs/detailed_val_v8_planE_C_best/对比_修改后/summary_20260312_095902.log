@@ -1,0 +1,40 @@
+======================================================================
+  详细验证汇总 | 20260312_095902
+======================================================================
+  模型: results/MyEnv/MyEnv/v8_planE_C/run1/phase_b_ppo/best_model
+  每尺寸场景: 20 | Device: cuda:0
+  奖励配置: first_reach=True | wall_penalty=True | pbrs=True
+
+    尺寸     成功率   stay%   loop%     撞墙     偏离A*      熵    碰撞     超时距
+-------------------------------------------------------------------
+ 8x8    80.0%   21.5%    9.2%    1.1    21.8%   0.71     0    4.8
+10x10   80.0%   17.2%   13.8%   10.7    18.9%   0.70     4    6.0
+12x12   85.0%   23.6%   11.5%    0.5    19.2%   0.70     1    5.3
+14x14   95.0%   27.8%    4.5%    0.0    16.1%   0.72     1    3.0
+16x16   65.0%   20.0%   13.5%    2.6    20.7%   0.75     0    9.6
+18x18   80.0%   21.7%   10.9%    0.7    18.9%   0.71     0   10.2
+20x20   80.0%   23.0%   14.2%    0.1    16.7%   0.76     0    6.8
+22x22   65.0%   29.1%   28.0%    0.6    22.9%   0.81     2    6.9
+   综合   78.8% (126/160)
+
+失败原因分类:
+   8x8: timeout=4  collision=0
+  10x10: timeout=3  collision=1
+  12x12: timeout=3  collision=0
+  14x14: timeout=1  collision=0
+  16x16: timeout=7  collision=0
+  18x18: timeout=4  collision=0
+  20x20: timeout=4  collision=0
+  22x22: timeout=7  collision=0
+
+各尺寸日志文件:
+  8x8: logs/detailed_val_v8_planE_C_best/对比_修改后/8x8_20260312_095902.log
+  10x10: logs/detailed_val_v8_planE_C_best/对比_修改后/10x10_20260312_095902.log
+  12x12: logs/detailed_val_v8_planE_C_best/对比_修改后/12x12_20260312_095902.log
+  14x14: logs/detailed_val_v8_planE_C_best/对比_修改后/14x14_20260312_095902.log
+  16x16: logs/detailed_val_v8_planE_C_best/对比_修改后/16x16_20260312_095902.log
+  18x18: logs/detailed_val_v8_planE_C_best/对比_修改后/18x18_20260312_095902.log
+  20x20: logs/detailed_val_v8_planE_C_best/对比_修改后/20x20_20260312_095902.log
+  22x22: logs/detailed_val_v8_planE_C_best/对比_修改后/22x22_20260312_095902.log
+GIF 目录: logs/detailed_val_v8_planE_C_best/对比_修改后/<size>/
+======================================================================

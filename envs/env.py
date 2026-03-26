@@ -35,7 +35,14 @@ class Env(object):
             no_progress_penalty=0.0,  # 未前进时的惩罚（可为0）
             use_astar_first_episode=True,  # 是否仅首个episode用A*动作
             obs_include_goal_direction=True,  # 是否在观测中包含目标方向（v8新增）
-            obs_include_position=True  # 是否在观测中包含当前位置（v8新增）
+            obs_include_position=True,  # 是否在观测中包含当前位置（v8新增）
+            max_astar_distance=None,  # 课程学习：限制 A* 最大距离，None 表示不限制
+            obs_include_visit_history=False,  # v9: 是否在观测中包含访问历史热力图
+            visit_history_length=20,  # v9: 访问历史回溯步数
+            use_pbrs=False,  # v9: 是否使用势能差分奖励塑形(PBRS)
+            scale_reward_by_size=False,  # v9: 是否按地图尺寸缩放奖励
+            use_first_reach_reward=False,  # planE: 首次到达大奖+stay微奖+全体bonus
+            use_wall_penalty=False,  # planE: 撞墙惩罚-0.1
     ):
         if seed is not None:
             np.random.seed(seed)
@@ -47,16 +54,27 @@ class Env(object):
         self.obs_radius = obs_radius
         self.max_episode_steps = max_episode_steps
         self.map_change_interval = map_change_interval
-        self.episode_count = 0  # 记录已经运行了多少轮 episode，用于随机地图的更换判断
+        self.episode_count = 0
         self.use_astar_shaping = use_astar_shaping
         self.progress_reward = progress_reward
         self.no_progress_penalty = no_progress_penalty
         self.use_astar_first_episode = use_astar_first_episode
         self.map_locked = False
+        self.max_astar_distance = max_astar_distance
         
         # v8: 观测增强参数
         self.obs_include_goal_direction = obs_include_goal_direction
         self.obs_include_position = obs_include_position
+        
+        # v9: 访问历史 + 奖励优化参数
+        self.obs_include_visit_history = obs_include_visit_history
+        self.visit_history_length = visit_history_length
+        self.use_pbrs = use_pbrs
+        self.scale_reward_by_size = scale_reward_by_size
+        self.use_first_reach_reward = use_first_reach_reward
+        self.use_wall_penalty = use_wall_penalty
+        self._prev_manhattan = None
+        self._agent_reached_goal = [False] * agent_num
 
         # 判断模式：shared_map 或 map_file 时不再随机更换地图
         self.use_random_map = (map_file is None and shared_map is None)
@@ -80,7 +98,7 @@ class Env(object):
                 raise ValueError("size_range must be (min, max) with min <= max")
             self.grid_size = random.randint(min_sz, max_sz)
             self._build_random_map()
-            print(f"[INFO] Initialized random map mode, fixed size: {self.grid_size}x{self.grid_size}")
+            pass
 
         # 验证地图
         assert self.map.shape == (self.grid_size, self.grid_size), "Map must be square!"
@@ -96,8 +114,9 @@ class Env(object):
         self.fixed_goals = None
         self.fixed_first_episode_only = False
         self.fixed_first_episode_used = False
+        self._position_history = [[] for _ in range(self.agent_num)]
 
-        # 计算观测维度（固定！因为 grid_size 在 init 后不再变化）
+        # 计算观测维度（固定！因为观测只依赖 obs_radius，不依赖 grid_size）
         # 基础局部观测: (2r+1)^2 = 25 维
         self.local_obs_dim = (2 * self.obs_radius + 1) ** 2
         
@@ -108,10 +127,15 @@ class Env(object):
         if self.obs_include_position:
             self.extra_obs_dim += 2  # x/size, y/size
         
-        self.obs_dim = self.local_obs_dim + self.extra_obs_dim
+        # v9: 访问历史通道 (2r+1)^2 维
+        self.visit_obs_dim = 0
+        if self.obs_include_visit_history:
+            self.visit_obs_dim = (2 * self.obs_radius + 1) ** 2
+        
+        self.obs_dim = self.local_obs_dim + self.extra_obs_dim + self.visit_obs_dim
         self.share_obs_dim = self.agent_num * self.obs_dim
         
-        print(f"[INFO] 观测维度: {self.obs_dim} (局部:{self.local_obs_dim} + 额外:{self.extra_obs_dim})")
+        self._obs_dim_printed = False
 
         # 定义空间（Gym 要求 init 后不可变）
         self.observation_space = [
@@ -124,6 +148,23 @@ class Env(object):
             spaces.Box(low=0.0, high=4.0, shape=(self.share_obs_dim,), dtype=np.float32)
             for _ in range(self.agent_num)
         ]
+
+    def rebuild_map_new_size(self, new_size):
+        """运行时改变地图尺寸并重新生成障碍物（观测空间不变）"""
+        self.grid_size = new_size
+        self._build_random_map()
+        self.use_random_map = True
+        self.start_pos = None
+        self.fixed_goals = None
+        self.map_locked = False
+        self.agents_pos = None
+        self.goals_pos = None
+        # v9: 重建访问计数地图（尺寸变化）
+        if self.obs_include_visit_history:
+            self._visit_count_map = [
+                np.zeros((new_size, new_size), dtype=np.float32)
+                for _ in range(self.agent_num)
+            ]
 
     def _heuristic(self, a, b):
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
@@ -291,6 +332,21 @@ class Env(object):
             pos_y = y / self.grid_size
             obs_parts.append(np.array([pos_x, pos_y], dtype=np.float32))
         
+        # 4. 访问历史热力图（v9新增）
+        if self.obs_include_visit_history and hasattr(self, '_visit_count_map'):
+            visit_obs = np.zeros((2 * r + 1, 2 * r + 1), dtype=np.float32)
+            vmap = self._visit_count_map[agent_id]
+            vmap_h, vmap_w = vmap.shape
+            for i in range(-r, r + 1):
+                for j in range(-r, r + 1):
+                    nx, ny = x + i, y + j
+                    if 0 <= nx < min(self.grid_size, vmap_h) and 0 <= ny < min(self.grid_size, vmap_w):
+                        visit_obs[i + r, j + r] = vmap[nx, ny]
+            max_val = visit_obs.max()
+            if max_val > 0:
+                visit_obs = visit_obs / max_val
+            obs_parts.append(visit_obs.flatten())
+        
         return np.concatenate(obs_parts)
 
     def _get_share_obs(self):
@@ -301,6 +357,15 @@ class Env(object):
         """重置环境状态"""
         self.steps = 0
         self.episode_count += 1
+        self._position_history = [[] for _ in range(self.agent_num)]
+        self._agent_reached_goal = [False] * self.agent_num
+        
+        # v9: 重置访问计数地图（每个智能体独立，按 grid_size 动态分配）
+        if self.obs_include_visit_history:
+            self._visit_count_map = [
+                np.zeros((self.grid_size, self.grid_size), dtype=np.float32)
+                for _ in range(self.agent_num)
+            ]
 
         # 仅首回合固定起点/终点，其余回合重新采样
         if self.fixed_first_episode_only and self.fixed_first_episode_used:
@@ -311,7 +376,6 @@ class Env(object):
         if self.use_random_map and self.map_change_interval > 0:
             if (self.episode_count - 1) % self.map_change_interval == 0:
                 self._build_random_map()
-                print(f"[MAP CHANGE] Episode {self.episode_count}: New obstacle layout generated.")
 
         # ===== 重置智能体和目标位置（确保可达） =====
         attempts = 0
@@ -350,6 +414,13 @@ class Env(object):
                     paths.append(path)
 
                 if reachable:
+                    if self.max_astar_distance is not None:
+                        max_path_len = max(len(p) - 1 for p in paths)
+                        if max_path_len > self.max_astar_distance:
+                            attempts += 1
+                            if attempts >= max_attempts:
+                                break
+                            continue
                     break
 
                 attempts += 1
@@ -374,6 +445,20 @@ class Env(object):
             for i in range(self.agent_num):
                 self.ref_paths[i] = paths[i]
                 self.ref_remaining[i] = len(paths[i]) - 1
+
+        # v9: 初始化 PBRS 前一步势能
+        if self.use_pbrs:
+            self._prev_manhattan = []
+            for i in range(self.agent_num):
+                gx, gy = self.goals_pos[i]
+                ax, ay = self.agents_pos[i]
+                self._prev_manhattan.append(abs(ax - gx) + abs(ay - gy))
+        
+        # v9: 标记起始位置到访问地图
+        if self.obs_include_visit_history:
+            for i in range(self.agent_num):
+                ax, ay = self.agents_pos[i]
+                self._visit_count_map[i][ax, ay] += 1.0
 
         # 构建观测
         obs = np.stack([self._get_local_obs(i) for i in range(self.agent_num)])
@@ -434,6 +519,25 @@ class Env(object):
                 # 更新 A* 参考路径
                 self.ref_paths = paths
                 self.ref_remaining = [len(p) - 1 for p in paths]
+                
+                # planE: 重置首次到达标记
+                self._agent_reached_goal = [False] * self.agent_num
+                
+                # v9: 重置 PBRS 势能
+                if self.use_pbrs:
+                    self._prev_manhattan = []
+                    for i in range(self.agent_num):
+                        gx, gy = self.goals_pos[i]
+                        ax, ay = self.agents_pos[i]
+                        self._prev_manhattan.append(abs(ax - gx) + abs(ay - gy))
+                
+                # v9: 重置访问计数地图
+                if self.obs_include_visit_history and hasattr(self, '_visit_count_map'):
+                    for i in range(self.agent_num):
+                        self._visit_count_map[i][:] = 0
+                        ax, ay = self.agents_pos[i]
+                        self._visit_count_map[i][ax, ay] = 1.0
+                
                 return True
         
         # 如果多次尝试失败（不应该发生），打印警告
@@ -469,12 +573,17 @@ class Env(object):
         if self.use_astar_first_episode and self.episode_count == 1:
             actions = [self._action_from_path(i) for i in range(self.agent_num)]
 
+        # 记录实际执行的动作（用于 stay 惩罚判定）
+        executed_actions = []
+        wall_bump = [False] * self.agent_num
+        prev_positions = list(self.agents_pos)
         # 临时存储新位置（先计算，再统一更新，避免顺序依赖）
         for i, action in enumerate(actions):
             if isinstance(action, (list, tuple, np.ndarray)):
                 action = int(np.argmax(action))
             else:
                 action = int(action)
+            executed_actions.append(action)
             x, y = self.agents_pos[i]
             dx, dy = [(0, 0), (-1, 0), (1, 0), (0, -1), (0, 1)][action]  # 0: stay, 1-4: up/down/left/right
             nx, ny = x + dx, y + dy
@@ -484,6 +593,8 @@ class Env(object):
                 next_agents_pos.append((nx, ny))
             else:
                 next_agents_pos.append((x, y))  # 保持原位
+                if action != 0:
+                    wall_bump[i] = True
 
         # 碰撞检测（智能体之间不能重叠）
         pos_set = set()
@@ -496,18 +607,64 @@ class Env(object):
                 pos_set.add(pos)
 
         self.agents_pos = next_agents_pos
+        
+        # v9: 更新访问计数地图
+        if self.obs_include_visit_history and hasattr(self, '_visit_count_map'):
+            for i in range(self.agent_num):
+                ax, ay = self.agents_pos[i]
+                self._visit_count_map[i][ax, ay] += 1.0
 
-        # 计算奖励和完成状态
+        # 计算奖励和完成状态（含分量追踪）
+        reward_components = [{"goal": 0.0, "collision": 0.0, "distance": 0.0,
+                              "astar": 0.0, "anti_stuck": 0.0, "pbrs": 0.0,
+                              "stay": 0.0, "wall": 0.0}
+                             for _ in range(self.agent_num)]
+
         for i in range(self.agent_num):
+            gx, gy = self.goals_pos[i]
+            ax, ay = self.agents_pos[i]
+            manhattan = abs(ax - gx) + abs(ay - gy)
+            
             if collision[i]:
                 rewards[i] = -5
+                reward_components[i]["collision"] = -5
             elif self.agents_pos[i] == self.goals_pos[i]:
-                rewards[i] = 10
+                if self.use_first_reach_reward:
+                    if not self._agent_reached_goal[i]:
+                        self._agent_reached_goal[i] = True
+                        r = 10.0
+                    else:
+                        r = 0.1
+                elif self.scale_reward_by_size:
+                    r = 10 + 0.5 * self.grid_size
+                else:
+                    r = 10
+                rewards[i] = r
+                reward_components[i]["goal"] = r
             else:
-                # 可选：加入距离奖励（例如负曼哈顿距离）
-                gx, gy = self.goals_pos[i]
-                ax, ay = self.agents_pos[i]
-                rewards[i] = -0.01 * (abs(ax - gx) + abs(ay - gy))
+                if self.scale_reward_by_size:
+                    r = -0.05 * manhattan - 0.01
+                else:
+                    r = -0.1 * manhattan / (2 * self.grid_size) - 0.01
+                rewards[i] = r
+                reward_components[i]["distance"] = r
+
+                # stay 惩罚：未到目标时选择 stay 给予额外惩罚
+                if executed_actions[i] == 0:
+                    rewards[i] -= 0.05
+                    reward_components[i]["stay"] = -0.05
+            
+            # planE: 撞墙惩罚
+            if self.use_wall_penalty and wall_bump[i]:
+                rewards[i] -= 0.1
+                reward_components[i]["wall"] = -0.1
+            
+            # v9: 势能差分奖励塑形 (PBRS)
+            if self.use_pbrs and self._prev_manhattan is not None and not collision[i]:
+                prev_m = self._prev_manhattan[i]
+                pbrs_reward = 0.1 * (prev_m - manhattan) / max(self.grid_size, 1)
+                rewards[i] += pbrs_reward
+                reward_components[i]["pbrs"] = pbrs_reward
 
             # A*路径进度奖励
             if self.use_astar_shaping:
@@ -519,50 +676,76 @@ class Env(object):
                         idx = path.index(self.agents_pos[i])
                         remaining = len(path) - 1 - idx
                     except ValueError:
-                        remaining = prev_remaining[i]
+                        new_path = self._astar_path(self.agents_pos[i], self.goals_pos[i])
+                        if new_path:
+                            self.ref_paths[i] = new_path
+                            remaining = len(new_path) - 1
+                        else:
+                            remaining = prev_remaining[i]
 
                     if prev_remaining[i] is not None and remaining is not None:
                         if remaining < prev_remaining[i]:
                             rewards[i] += self.progress_reward
+                            reward_components[i]["astar"] = self.progress_reward
                         else:
                             rewards[i] += self.no_progress_penalty
+                            reward_components[i]["astar"] = self.no_progress_penalty
                     self.ref_remaining[i] = remaining
+
+            # 抗卡死：重复位置惩罚（30步历史窗口，系数 0.2）
+            if self.agents_pos[i] != self.goals_pos[i]:
+                pos = self.agents_pos[i]
+                history = self._position_history[i]
+                visit_count = history[-30:].count(pos)
+                if visit_count > 0:
+                    rewards[i] -= 0.2 * visit_count
+                    reward_components[i]["anti_stuck"] = -0.2 * visit_count
+                history.append(pos)
+                if len(history) > 40:
+                    self._position_history[i] = history[-40:]
 
             if self.agents_pos[i] != self.goals_pos[i]:
                 done_all = False
 
+        # planE: 全体到达 bonus
+        if self.use_first_reach_reward and done_all:
+            for i in range(self.agent_num):
+                rewards[i] += 5.0
+                reward_components[i]["goal"] += 5.0
+
+        # v9: 更新 PBRS 前一步势能
+        if self.use_pbrs:
+            self._prev_manhattan = []
+            for i in range(self.agent_num):
+                gx, gy = self.goals_pos[i]
+                ax, ay = self.agents_pos[i]
+                self._prev_manhattan.append(abs(ax - gx) + abs(ay - gy))
+
         truncated = (self.steps >= self.max_episode_steps)
         looped_to_start = False
+        all_goals_reached = False
 
         # 如果本回合已全部到达终点但还未到达最大步数，则重新生成新的起点终点
         if done_all and not truncated:
-            # 重新随机生成新的起点和终点
             self._regenerate_start_goal()
             done_all = False
             looped_to_start = True
-            self._stuck_counter = 0  # 重置卡住计数器
+            all_goals_reached = True
+            self._stuck_counter = 0
         
-        # 检测智能体被阻塞的情况（使用简单的连续无移动步数检测）
+        # 检测智能体被阻塞：连续 N 步所有 agent 位置不变则重新生成任务
         if not done_all and not truncated and not looped_to_start:
-            # 检查是否有智能体已到达终点但其他智能体被阻塞
-            agents_at_goal = [self.agents_pos[i] == self.goals_pos[i] for i in range(self.agent_num)]
-            if any(agents_at_goal) and not all(agents_at_goal):
-                # 有部分智能体到达终点
-                # 检查位置是否与上一步相同
-                if hasattr(self, '_prev_positions') and self.agents_pos == self._prev_positions:
-                    self._stuck_counter = getattr(self, '_stuck_counter', 0) + 1
-                else:
-                    self._stuck_counter = 0
-                
-                # 如果连续 3 步没有移动且有智能体被阻塞，触发重置
-                if self._stuck_counter >= 3:
-                    self._regenerate_start_goal()
-                    done_all = False
-                    looped_to_start = True
-                    self._stuck_counter = 0
+            if hasattr(self, '_prev_positions') and self.agents_pos == self._prev_positions:
+                self._stuck_counter = getattr(self, '_stuck_counter', 0) + 1
             else:
                 self._stuck_counter = 0
-            
+
+            if self._stuck_counter >= 3:
+                self._regenerate_start_goal()
+                done_all = False
+                looped_to_start = True
+                self._stuck_counter = 0
+
             self._prev_positions = list(self.agents_pos)
 
         terminated = done_all
@@ -576,7 +759,9 @@ class Env(object):
             "collision": collision,
             "episode_step": self.steps,
             "episode_count": self.episode_count,
-            "looped_to_start": looped_to_start
+            "looped_to_start": looped_to_start,
+            "all_goals_reached": all_goals_reached,
+            "reward_components": reward_components,
         }
 
         return obs, share_obs, rewards, dones, info
@@ -768,6 +953,25 @@ class Env(object):
         
         self.set_start_goal(starts, goals)
         self.steps = 0  # 重置步数计数
+        self._position_history = [[] for _ in range(self.agent_num)]
+        
+        # v9: 重新初始化访问计数地图（尺寸可能与之前不同）
+        if self.obs_include_visit_history:
+            self._visit_count_map = [
+                np.zeros((self.grid_size, self.grid_size), dtype=np.float32)
+                for _ in range(self.agent_num)
+            ]
+            for i in range(self.agent_num):
+                ax, ay = self.agents_pos[i]
+                self._visit_count_map[i][ax, ay] = 1.0
+        
+        # v9: 初始化 PBRS
+        if self.use_pbrs:
+            self._prev_manhattan = []
+            for i in range(self.agent_num):
+                gx, gy = self.goals_pos[i]
+                ax, ay = self.agents_pos[i]
+                self._prev_manhattan.append(abs(ax - gx) + abs(ay - gy))
         
         # 重建观测
         obs = np.stack([self._get_local_obs(i) for i in range(self.agent_num)])

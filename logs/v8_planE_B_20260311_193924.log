@@ -1,0 +1,471 @@
+使用GPU进行训练...
+[断点续训] 复用已有目录: run1
+[restore] actor: 检测到维度不匹配, 执行部分权重加载
+  [partial] base.feature_norm.weight: saved torch.Size([55]) -> current torch.Size([104])
+  [partial] base.feature_norm.bias: saved torch.Size([55]) -> current torch.Size([104])
+  [partial] base.mlp.fc1.0.weight: saved torch.Size([256, 55]) -> current torch.Size([256, 104])
+[restore] critic: 检测到维度不匹配, 执行部分权重加载
+  [partial] base.feature_norm.weight: saved torch.Size([110]) -> current torch.Size([208])
+  [partial] base.feature_norm.bias: saved torch.Size([110]) -> current torch.Size([208])
+  [partial] base.mlp.fc1.0.weight: saved torch.Size([256, 110]) -> current torch.Size([256, 208])
+
+======================================================================
+  实验名称: v8_planE_B
+  运行目录: /workspace/zj/light_mappo-main/results/MyEnv/MyEnv/v8_planE_B/run1
+  训练模式: phase_b_only
+  设备: cuda:0
+======================================================================
+
+
+══════════════════════════════════════════════════════════════════════
+                    Phase B: PPO 训练
+══════════════════════════════════════════════════════════════════════
+  预训练模型: results/MyEnv/MyEnv/full_v8/run1/phase_a_astar/checkpoint_ep190/models
+  训练回合数: 2000
+  评估间隔: 每 100 回合 (自动保存模型)
+  并行环境: 256
+  网络结构: 256 × 4 层
+══════════════════════════════════════════════════════════════════════
+
+[Phase B] 从 checkpoint ep400 恢复模型
+[Phase B] 跳过已有 400 episodes, 从 Episode 401 继续训练
+
+[课程阶段 1/4] 地图: 8-12, max_dist: 10
+  ep 410/2000  reward=  174.9  ploss=-0.0013  entropy=0.861  EV=0.030  FPS=74914  ETA=23min
+         reward分量: goal=+0.806 | collision=-0.029 | distance=-0.022 | astar=+0.088 | anti_stuck=-0.278 | stay=-0.002 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:398 9:438 10:431 11:611 12:682
+  ep 420/2000  reward=  180.8  ploss=-0.0014  entropy=0.812  EV=0.025  FPS=39147  ETA=44min
+         reward分量: goal=+0.912 | collision=-0.031 | distance=-0.022 | astar=+0.094 | anti_stuck=-0.256 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:445 9:422 10:409 11:646 12:638
+  ep 430/2000  reward=  204.5  ploss=-0.0011  entropy=0.762  EV=0.022  FPS=26910  ETA=64min
+         reward分量: goal=+0.943 | collision=-0.030 | distance=-0.022 | astar=+0.095 | anti_stuck=-0.251 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:417 9:417 10:420 11:683 12:623
+  ep 440/2000  reward=  178.2  ploss=-0.0015  entropy=0.778  EV=0.024  FPS=20771  ETA=82min
+         reward分量: goal=+0.946 | collision=-0.030 | distance=-0.022 | astar=+0.096 | anti_stuck=-0.252 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:424 9:415 10:423 11:644 12:654
+  ep 450/2000  reward=  173.7  ploss=-0.0017  entropy=0.787  EV=0.024  FPS=17045  ETA=99min
+         reward分量: goal=+0.948 | collision=-0.030 | distance=-0.022 | astar=+0.097 | anti_stuck=-0.249 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:408 9:452 10:422 11:606 12:672
+  ep 460/2000  reward=  199.7  ploss=-0.0014  entropy=0.734  EV=0.022  FPS=14551  ETA=116min
+         reward分量: goal=+0.979 | collision=-0.029 | distance=-0.022 | astar=+0.098 | anti_stuck=-0.249 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:437 9:434 10:453 11:608 12:628
+  ep 470/2000  reward=  201.5  ploss=-0.0014  entropy=0.727  EV=0.022  FPS=12719  ETA=131min
+         reward分量: goal=+0.987 | collision=-0.029 | distance=-0.022 | astar=+0.098 | anti_stuck=-0.239 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:405 9:456 10:416 11:604 12:679
+  ep 480/2000  reward=  192.8  ploss=-0.0016  entropy=0.721  EV=0.025  FPS=11258  ETA=147min
+         reward分量: goal=+1.002 | collision=-0.030 | distance=-0.022 | astar=+0.100 | anti_stuck=-0.246 | stay=-0.001 | pbrs=+0.005 | wall=-0.010
+         地图分布(n=2560): 8:463 9:392 10:426 11:629 12:650
+  ep 490/2000  reward=  215.4  ploss=-0.0015  entropy=0.713  EV=0.021  FPS=10108  ETA=163min
+         reward分量: goal=+1.028 | collision=-0.030 | distance=-0.022 | astar=+0.101 | anti_stuck=-0.237 | stay=-0.001 | pbrs=+0.005 | wall=-0.010
+         地图分布(n=2560): 8:452 9:419 10:422 11:659 12:608
+  ep 500/2000  reward=  221.6  ploss=-0.0013  entropy=0.689  EV=0.017  FPS=9201  ETA=178min
+         reward分量: goal=+1.036 | collision=-0.030 | distance=-0.022 | astar=+0.101 | anti_stuck=-0.227 | stay=-0.001 | pbrs=+0.005 | wall=-0.010
+         地图分布(n=2560): 8:425 9:456 10:412 11:650 12:617
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 500/2000 - 训练评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  训练评估: 31/40 (77.5%)  ratio=1.03x  timeout=9  collision=0
+    small(8-12): 31/40 (78%)  timeout_dist=4.5  stay=24%  loop=12%
+  ★ 新最佳模型! ep500 (77.5%)
+
+[课程阶段 2/4] 地图: 8-16, max_dist: 18
+  ep 510/2000  reward=  173.2  ploss=-0.0016  entropy=0.738  EV=0.021  FPS=8412  ETA=193min
+         reward分量: goal=+0.859 | collision=-0.023 | distance=-0.022 | astar=+0.100 | anti_stuck=-0.244 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:268 9:280 10:279 11:260 12:270 13:292 14:280 15:300 16:331
+  ep 520/2000  reward=  178.1  ploss=-0.0015  entropy=0.704  EV=0.025  FPS=7822  ETA=207min
+         reward分量: goal=+0.870 | collision=-0.024 | distance=-0.022 | astar=+0.100 | anti_stuck=-0.238 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:295 9:273 10:269 11:282 12:277 13:297 14:297 15:285 16:285
+  ep 530/2000  reward=  184.9  ploss=-0.0015  entropy=0.704  EV=0.021  FPS=7315  ETA=219min
+         reward分量: goal=+0.888 | collision=-0.024 | distance=-0.022 | astar=+0.100 | anti_stuck=-0.230 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:299 9:315 10:256 11:291 12:291 13:283 14:269 15:277 16:279
+  ep 540/2000  reward=  163.0  ploss=-0.0015  entropy=0.714  EV=0.023  FPS=6890  ETA=231min
+         reward分量: goal=+0.886 | collision=-0.023 | distance=-0.022 | astar=+0.101 | anti_stuck=-0.229 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:283 9:304 10:278 11:283 12:254 13:283 14:286 15:294 16:295
+  ep 550/2000  reward=  164.6  ploss=-0.0017  entropy=0.724  EV=0.023  FPS=6529  ETA=243min
+         reward分量: goal=+0.878 | collision=-0.024 | distance=-0.022 | astar=+0.102 | anti_stuck=-0.238 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:264 9:306 10:294 11:269 12:274 13:288 14:313 15:268 16:284
+  ep 560/2000  reward=  174.4  ploss=-0.0014  entropy=0.696  EV=0.023  FPS=6202  ETA=254min
+         reward分量: goal=+0.878 | collision=-0.023 | distance=-0.022 | astar=+0.102 | anti_stuck=-0.232 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:284 9:245 10:276 11:272 12:282 13:303 14:297 15:295 16:306
+  ep 570/2000  reward=  167.7  ploss=-0.0015  entropy=0.726  EV=0.023  FPS=5948  ETA=263min
+         reward分量: goal=+0.880 | collision=-0.023 | distance=-0.022 | astar=+0.102 | anti_stuck=-0.233 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:284 9:268 10:248 11:277 12:305 13:313 14:299 15:280 16:286
+  ep 580/2000  reward=  174.0  ploss=-0.0014  entropy=0.722  EV=0.024  FPS=5726  ETA=271min
+         reward分量: goal=+0.871 | collision=-0.023 | distance=-0.022 | astar=+0.102 | anti_stuck=-0.229 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:287 9:268 10:271 11:267 12:271 13:296 14:302 15:303 16:295
+  ep 590/2000  reward=  179.6  ploss=-0.0014  entropy=0.686  EV=0.024  FPS=5527  ETA=279min
+         reward分量: goal=+0.912 | collision=-0.024 | distance=-0.022 | astar=+0.103 | anti_stuck=-0.217 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:291 9:289 10:288 11:288 12:281 13:272 14:298 15:269 16:284
+  ep 600/2000  reward=  178.3  ploss=-0.0015  entropy=0.699  EV=0.020  FPS=5345  ETA=286min
+         reward分量: goal=+0.893 | collision=-0.024 | distance=-0.022 | astar=+0.103 | anti_stuck=-0.231 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:240 9:274 10:306 11:302 12:293 13:304 14:296 15:272 16:273
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 600/2000 - 训练评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  训练评估: 30/40 (75.0%)  ratio=1.03x  timeout=10  collision=0
+    small(8-12): 15/20 (75%)  timeout_dist=4.8  stay=24%  loop=9%
+    medium(13-17): 15/20 (75%)  timeout_dist=10.6  stay=16%  loop=5%
+  ep 610/2000  reward=  183.6  ploss=-0.0015  entropy=0.689  EV=0.023  FPS=5179  ETA=293min
+         reward分量: goal=+0.904 | collision=-0.023 | distance=-0.022 | astar=+0.104 | anti_stuck=-0.221 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:259 9:316 10:267 11:299 12:280 13:257 14:286 15:287 16:309
+  ep 620/2000  reward=  186.7  ploss=-0.0018  entropy=0.690  EV=0.022  FPS=5030  ETA=300min
+         reward分量: goal=+0.911 | collision=-0.023 | distance=-0.022 | astar=+0.104 | anti_stuck=-0.223 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:284 9:260 10:322 11:279 12:299 13:284 14:282 15:266 16:284
+  ep 630/2000  reward=  181.9  ploss=-0.0018  entropy=0.679  EV=0.022  FPS=4891  ETA=306min
+         reward分量: goal=+0.903 | collision=-0.023 | distance=-0.022 | astar=+0.104 | anti_stuck=-0.223 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:292 9:276 10:277 11:310 12:275 13:278 14:259 15:303 16:290
+  ep 640/2000  reward=  170.8  ploss=-0.0016  entropy=0.719  EV=0.022  FPS=4762  ETA=312min
+         reward分量: goal=+0.922 | collision=-0.023 | distance=-0.022 | astar=+0.104 | anti_stuck=-0.214 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:310 9:277 10:295 11:290 12:295 13:272 14:252 15:271 16:298
+  ep 650/2000  reward=  176.5  ploss=-0.0014  entropy=0.705  EV=0.024  FPS=4646  ETA=317min
+         reward分量: goal=+0.897 | collision=-0.023 | distance=-0.022 | astar=+0.103 | anti_stuck=-0.231 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:298 9:282 10:287 11:289 12:273 13:280 14:281 15:305 16:265
+  ep 660/2000  reward=  181.2  ploss=-0.0016  entropy=0.689  EV=0.024  FPS=4537  ETA=323min
+         reward分量: goal=+0.907 | collision=-0.022 | distance=-0.022 | astar=+0.105 | anti_stuck=-0.228 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:252 9:311 10:309 11:255 12:252 13:276 14:299 15:315 16:291
+  ep 670/2000  reward=  197.1  ploss=-0.0016  entropy=0.683  EV=0.025  FPS=4435  ETA=328min
+         reward分量: goal=+0.907 | collision=-0.022 | distance=-0.022 | astar=+0.104 | anti_stuck=-0.237 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:290 9:283 10:286 11:316 12:275 13:261 14:258 15:301 16:290
+  ep 680/2000  reward=  189.3  ploss=-0.0016  entropy=0.693  EV=0.025  FPS=4342  ETA=332min
+         reward分量: goal=+0.902 | collision=-0.022 | distance=-0.022 | astar=+0.104 | anti_stuck=-0.224 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:289 9:265 10:282 11:296 12:293 13:308 14:269 15:278 16:280
+  ep 690/2000  reward=  180.1  ploss=-0.0014  entropy=0.697  EV=0.023  FPS=4255  ETA=336min
+         reward分量: goal=+0.900 | collision=-0.021 | distance=-0.022 | astar=+0.104 | anti_stuck=-0.218 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:279 9:277 10:271 11:285 12:287 13:277 14:305 15:302 16:277
+  ep 700/2000  reward=  209.1  ploss=-0.0014  entropy=0.671  EV=0.020  FPS=4172  ETA=340min
+         reward分量: goal=+0.925 | collision=-0.023 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.211 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:271 9:302 10:286 11:282 12:288 13:272 14:295 15:298 16:266
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 700/2000 - 训练评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  训练评估: 34/40 (85.0%)  ratio=1.02x  timeout=6  collision=0
+    small(8-12): 21/24 (88%)  timeout_dist=6.2  stay=19%  loop=6%
+    medium(13-17): 13/16 (81%)  timeout_dist=3.8  stay=22%  loop=12%
+  ★ 新最佳模型! ep700 (85.0%)
+  ep 710/2000  reward=  190.3  ploss=-0.0016  entropy=0.679  EV=0.025  FPS=4087  ETA=345min
+         reward分量: goal=+0.910 | collision=-0.022 | distance=-0.022 | astar=+0.104 | anti_stuck=-0.217 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:279 9:267 10:299 11:306 12:273 13:280 14:275 15:280 16:301
+  ep 720/2000  reward=  201.1  ploss=-0.0015  entropy=0.667  EV=0.022  FPS=4006  ETA=349min
+         reward分量: goal=+0.914 | collision=-0.022 | distance=-0.022 | astar=+0.105 | anti_stuck=-0.229 | stay=-0.001 | pbrs=+0.004 | wall=-0.011
+         地图分布(n=2560): 8:284 9:280 10:276 11:292 12:300 13:276 14:280 15:286 16:286
+  ep 730/2000  reward=  197.1  ploss=-0.0014  entropy=0.657  EV=0.022  FPS=3930  ETA=353min
+         reward分量: goal=+0.931 | collision=-0.022 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.209 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:259 9:283 10:283 11:316 12:278 13:280 14:284 15:297 16:280
+  ep 740/2000  reward=  205.7  ploss=-0.0013  entropy=0.654  EV=0.022  FPS=3855  ETA=357min
+         reward分量: goal=+0.934 | collision=-0.023 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.216 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:267 9:311 10:309 11:245 12:276 13:306 14:307 15:279 16:260
+  ep 750/2000  reward=  171.6  ploss=-0.0015  entropy=0.701  EV=0.025  FPS=3786  ETA=361min
+         reward分量: goal=+0.935 | collision=-0.022 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.212 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:293 9:263 10:282 11:301 12:260 13:297 14:300 15:273 16:291
+  ep 760/2000  reward=  199.6  ploss=-0.0015  entropy=0.667  EV=0.022  FPS=3716  ETA=365min
+         reward分量: goal=+0.910 | collision=-0.022 | distance=-0.022 | astar=+0.105 | anti_stuck=-0.223 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:272 9:274 10:270 11:292 12:294 13:300 14:292 15:276 16:290
+  ep 770/2000  reward=  192.5  ploss=-0.0015  entropy=0.685  EV=0.024  FPS=3656  ETA=367min
+         reward分量: goal=+0.916 | collision=-0.022 | distance=-0.022 | astar=+0.104 | anti_stuck=-0.228 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:292 9:262 10:324 11:295 12:298 13:269 14:299 15:268 16:253
+  ep 780/2000  reward=  212.5  ploss=-0.0015  entropy=0.664  EV=0.024  FPS=3597  ETA=370min
+         reward分量: goal=+0.930 | collision=-0.021 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.216 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:279 9:291 10:272 11:309 12:277 13:285 14:267 15:293 16:287
+  ep 790/2000  reward=  177.8  ploss=-0.0016  entropy=0.682  EV=0.024  FPS=3543  ETA=373min
+         reward分量: goal=+0.931 | collision=-0.020 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.216 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:279 9:281 10:285 11:283 12:303 13:264 14:313 15:278 16:274
+  ep 800/2000  reward=  181.5  ploss=-0.0015  entropy=0.686  EV=0.024  FPS=3491  ETA=375min
+         reward分量: goal=+0.910 | collision=-0.020 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.221 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:289 9:247 10:296 11:272 12:274 13:278 14:296 15:306 16:302
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 800/2000 - 训练评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  训练评估: 30/40 (75.0%)  ratio=1.05x  timeout=8  collision=2
+    small(8-12): 12/17 (71%)  timeout_dist=5.6  stay=23%  loop=9%
+    medium(13-17): 18/23 (78%)  timeout_dist=5.5  stay=18%  loop=10%
+  ep 810/2000  reward=  199.8  ploss=-0.0016  entropy=0.672  EV=0.021  FPS=3439  ETA=378min
+         reward分量: goal=+0.927 | collision=-0.022 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.212 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:275 9:287 10:279 11:284 12:300 13:293 14:295 15:285 16:262
+  ep 820/2000  reward=  194.2  ploss=-0.0016  entropy=0.686  EV=0.021  FPS=3393  ETA=380min
+         reward分量: goal=+0.937 | collision=-0.022 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.211 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:290 9:296 10:298 11:287 12:285 13:266 14:310 15:260 16:268
+  ep 830/2000  reward=  202.5  ploss=-0.0014  entropy=0.666  EV=0.022  FPS=3347  ETA=382min
+         reward分量: goal=+0.917 | collision=-0.021 | distance=-0.023 | astar=+0.106 | anti_stuck=-0.212 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:260 9:293 10:293 11:275 12:278 13:280 14:275 15:309 16:297
+  ep 840/2000  reward=  198.5  ploss=-0.0015  entropy=0.655  EV=0.023  FPS=3308  ETA=383min
+         reward分量: goal=+0.934 | collision=-0.022 | distance=-0.022 | astar=+0.107 | anti_stuck=-0.212 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:273 9:291 10:265 11:281 12:284 13:309 14:291 15:289 16:277
+  ep 850/2000  reward=  195.5  ploss=-0.0016  entropy=0.674  EV=0.021  FPS=3273  ETA=384min
+         reward分量: goal=+0.929 | collision=-0.022 | distance=-0.022 | astar=+0.107 | anti_stuck=-0.214 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:274 9:273 10:281 11:305 12:275 13:313 14:291 15:259 16:289
+  ep 860/2000  reward=  206.3  ploss=-0.0015  entropy=0.653  EV=0.021  FPS=3242  ETA=384min
+         reward分量: goal=+0.936 | collision=-0.022 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.212 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:289 9:275 10:294 11:277 12:269 13:294 14:282 15:309 16:271
+使用GPU进行训练...
+[断点续训] 复用已有目录: run1
+[restore] actor: 检测到维度不匹配, 执行部分权重加载
+  [partial] base.feature_norm.weight: saved torch.Size([55]) -> current torch.Size([104])
+  [partial] base.feature_norm.bias: saved torch.Size([55]) -> current torch.Size([104])
+  [partial] base.mlp.fc1.0.weight: saved torch.Size([256, 55]) -> current torch.Size([256, 104])
+[restore] critic: 检测到维度不匹配, 执行部分权重加载
+  [partial] base.feature_norm.weight: saved torch.Size([110]) -> current torch.Size([208])
+  [partial] base.feature_norm.bias: saved torch.Size([110]) -> current torch.Size([208])
+  [partial] base.mlp.fc1.0.weight: saved torch.Size([256, 110]) -> current torch.Size([256, 208])
+
+======================================================================
+  实验名称: v8_planE_B
+  运行目录: /workspace/zj/light_mappo-main/results/MyEnv/MyEnv/v8_planE_B/run1
+  训练模式: phase_b_only
+  设备: cuda:0
+======================================================================
+
+
+══════════════════════════════════════════════════════════════════════
+                    Phase B: PPO 训练
+══════════════════════════════════════════════════════════════════════
+  预训练模型: results/MyEnv/MyEnv/full_v8/run1/phase_a_astar/checkpoint_ep190/models
+  训练回合数: 2000
+  评估间隔: 每 100 回合 (自动保存模型)
+  并行环境: 256
+  网络结构: 256 × 4 层
+══════════════════════════════════════════════════════════════════════
+
+[Phase B] 从 checkpoint ep800 恢复模型
+[Phase B] 跳过已有 800 episodes, 从 Episode 801 继续训练
+
+[课程阶段 2/4] 地图: 8-16, max_dist: 18
+  ep 810/2000  reward=  207.1  ploss=-0.0014  entropy=0.636  EV=0.025  FPS=131032  ETA=10min
+         reward分量: goal=+0.930 | collision=-0.021 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.207 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:291 9:284 10:298 11:271 12:287 13:276 14:266 15:282 16:305
+  ep 820/2000  reward=  211.7  ploss=-0.0014  entropy=0.619  EV=0.020  FPS=67061  ETA=19min
+         reward分量: goal=+0.953 | collision=-0.022 | distance=-0.022 | astar=+0.107 | anti_stuck=-0.199 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:289 9:272 10:290 11:261 12:311 13:293 14:287 15:272 16:285
+  ep 830/2000  reward=  212.1  ploss=-0.0013  entropy=0.613  EV=0.021  FPS=45078  ETA=28min
+         reward分量: goal=+0.935 | collision=-0.022 | distance=-0.022 | astar=+0.107 | anti_stuck=-0.206 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:256 9:257 10:274 11:289 12:299 13:287 14:276 15:316 16:306
+  ep 840/2000  reward=  205.2  ploss=-0.0015  entropy=0.658  EV=0.021  FPS=34061  ETA=37min
+         reward分量: goal=+0.938 | collision=-0.021 | distance=-0.022 | astar=+0.106 | anti_stuck=-0.207 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:302 9:258 10:275 11:298 12:292 13:283 14:297 15:266 16:289
+  ep 850/2000  reward=  199.7  ploss=-0.0015  entropy=0.639  EV=0.021  FPS=27230  ETA=46min
+         reward分量: goal=+0.945 | collision=-0.021 | distance=-0.022 | astar=+0.107 | anti_stuck=-0.206 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:287 9:280 10:277 11:277 12:277 13:268 14:312 15:297 16:285
+  ep 860/2000  reward=  198.5  ploss=-0.0015  entropy=0.640  EV=0.024  FPS=22427  ETA=56min
+         reward分量: goal=+0.932 | collision=-0.021 | distance=-0.022 | astar=+0.107 | anti_stuck=-0.213 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:272 9:269 10:276 11:299 12:270 13:275 14:308 15:297 16:294
+  ep 870/2000  reward=  213.1  ploss=-0.0016  entropy=0.648  EV=0.019  FPS=19503  ETA=63min
+         reward分量: goal=+0.952 | collision=-0.021 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.199 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:274 9:304 10:279 11:274 12:263 13:298 14:295 15:292 16:281
+  ep 880/2000  reward=  213.7  ploss=-0.0016  entropy=0.629  EV=0.020  FPS=17013  ETA=72min
+         reward分量: goal=+0.942 | collision=-0.021 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.208 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:273 9:262 10:303 11:299 12:274 13:298 14:307 15:253 16:291
+  ep 890/2000  reward=  215.5  ploss=-0.0016  entropy=0.632  EV=0.022  FPS=15086  ETA=80min
+         reward分量: goal=+0.958 | collision=-0.021 | distance=-0.022 | astar=+0.109 | anti_stuck=-0.196 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:266 9:289 10:291 11:284 12:277 13:290 14:282 15:284 16:297
+  ep 900/2000  reward=  197.7  ploss=-0.0017  entropy=0.659  EV=0.021  FPS=13619  ETA=88min
+         reward分量: goal=+0.958 | collision=-0.022 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.201 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:287 9:277 10:290 11:302 12:279 13:270 14:293 15:295 16:267
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 900/2000 - 训练评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  训练评估: 29/40 (72.5%)  ratio=1.02x  timeout=10  collision=1
+    small(8-12): 18/20 (90%)  timeout_dist=3.8  stay=21%  loop=8%
+    medium(13-17): 11/20 (55%)  timeout_dist=6.7  stay=14%  loop=15%
+  ★ 新最佳模型! ep900 (72.5%)
+  ep 910/2000  reward=  197.6  ploss=-0.0016  entropy=0.659  EV=0.027  FPS=12386  ETA=96min
+         reward分量: goal=+0.954 | collision=-0.022 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.213 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:304 9:272 10:279 11:300 12:288 13:257 14:282 15:286 16:292
+  ep 920/2000  reward=  210.6  ploss=-0.0015  entropy=0.647  EV=0.022  FPS=11422  ETA=103min
+         reward分量: goal=+0.955 | collision=-0.022 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.206 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:272 9:286 10:297 11:324 12:287 13:314 14:258 15:243 16:279
+  ep 930/2000  reward=  209.1  ploss=-0.0019  entropy=0.655  EV=0.022  FPS=10372  ETA=113min
+         reward分量: goal=+0.940 | collision=-0.022 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.202 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:253 9:264 10:270 11:246 12:309 13:332 14:291 15:285 16:310
+  ep 940/2000  reward=  207.8  ploss=-0.0018  entropy=0.665  EV=0.022  FPS=9728  ETA=119min
+         reward分量: goal=+0.943 | collision=-0.022 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.210 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:257 9:301 10:279 11:284 12:277 13:281 14:289 15:296 16:296
+  ep 950/2000  reward=  200.8  ploss=-0.0016  entropy=0.656  EV=0.023  FPS=9172  ETA=125min
+         reward分量: goal=+0.948 | collision=-0.021 | distance=-0.022 | astar=+0.107 | anti_stuck=-0.210 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:286 9:286 10:284 11:344 12:274 13:283 14:258 15:289 16:256
+  ep 960/2000  reward=  221.8  ploss=-0.0016  entropy=0.635  EV=0.021  FPS=8693  ETA=131min
+         reward分量: goal=+0.994 | collision=-0.021 | distance=-0.022 | astar=+0.109 | anti_stuck=-0.184 | stay=-0.001 | pbrs=+0.005 | wall=-0.008
+         地图分布(n=2560): 8:297 9:291 10:298 11:301 12:285 13:281 14:291 15:267 16:249
+  ep 970/2000  reward=  207.9  ploss=-0.0017  entropy=0.650  EV=0.021  FPS=8163  ETA=138min
+         reward分量: goal=+0.967 | collision=-0.021 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.192 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:287 9:266 10:266 11:296 12:306 13:284 14:319 15:279 16:257
+  ep 980/2000  reward=  233.6  ploss=-0.0015  entropy=0.636  EV=0.018  FPS=7726  ETA=144min
+         reward分量: goal=+0.967 | collision=-0.022 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.197 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:297 9:271 10:290 11:280 12:293 13:294 14:302 15:276 16:257
+  ep 990/2000  reward=  223.3  ploss=-0.0014  entropy=0.631  EV=0.021  FPS=7401  ETA=149min
+         reward分量: goal=+0.968 | collision=-0.021 | distance=-0.022 | astar=+0.109 | anti_stuck=-0.198 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:266 9:288 10:300 11:295 12:272 13:280 14:277 15:306 16:276
+  ep1000/2000  reward=  205.2  ploss=-0.0015  entropy=0.656  EV=0.023  FPS=7106  ETA=154min
+         reward分量: goal=+0.958 | collision=-0.022 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.208 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:292 9:298 10:276 11:263 12:303 13:272 14:302 15:254 16:300
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 1000/2000 - 训练评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  训练评估: 31/40 (77.5%)  ratio=1.03x  timeout=8  collision=1
+    small(8-12): 21/26 (81%)  timeout_dist=5.0  stay=23%  loop=15%
+    medium(13-17): 10/14 (71%)  timeout_dist=6.0  stay=26%  loop=17%
+  ★ 新最佳模型! ep1000 (77.5%)
+
+[课程阶段 3/4] 地图: 8-20, max_dist: 30
+  ep1010/2000  reward=  182.1  ploss=-0.0019  entropy=0.677  EV=0.029  FPS=6813  ETA=159min
+         reward分量: goal=+0.886 | collision=-0.020 | distance=-0.022 | astar=+0.109 | anti_stuck=-0.222 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:285 9:263 10:293 11:224 12:198 13:220 14:199 15:149 16:135 17:145 18:147 19:163 20:139
+  ep1020/2000  reward=  188.7  ploss=-0.0018  entropy=0.645  EV=0.025  FPS=6573  ETA=163min
+         reward分量: goal=+0.888 | collision=-0.020 | distance=-0.022 | astar=+0.108 | anti_stuck=-0.217 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:263 9:295 10:293 11:213 12:203 13:205 14:222 15:142 16:157 17:134 18:160 19:144 20:129
+  ep1030/2000  reward=  209.0  ploss=-0.0017  entropy=0.628  EV=0.024  FPS=6351  ETA=167min
+         reward分量: goal=+0.907 | collision=-0.020 | distance=-0.022 | astar=+0.109 | anti_stuck=-0.212 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:276 9:300 10:297 11:202 12:195 13:225 14:213 15:128 16:165 17:131 18:125 19:145 20:158
+  ep1040/2000  reward=  191.2  ploss=-0.0016  entropy=0.664  EV=0.022  FPS=6149  ETA=171min
+         reward分量: goal=+0.934 | collision=-0.020 | distance=-0.022 | astar=+0.110 | anti_stuck=-0.203 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:295 9:321 10:271 11:232 12:227 13:201 14:196 15:134 16:139 17:156 18:134 19:139 20:115
+  ep1050/2000  reward=  201.3  ploss=-0.0014  entropy=0.644  EV=0.022  FPS=5962  ETA=174min
+         reward分量: goal=+0.916 | collision=-0.020 | distance=-0.023 | astar=+0.109 | anti_stuck=-0.195 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:257 9:321 10:278 11:247 12:214 13:180 14:200 15:147 16:137 17:149 18:146 19:144 20:140
+  ep1060/2000  reward=  204.0  ploss=-0.0016  entropy=0.639  EV=0.027  FPS=5792  ETA=177min
+         reward分量: goal=+0.933 | collision=-0.020 | distance=-0.022 | astar=+0.110 | anti_stuck=-0.193 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:287 9:302 10:300 11:225 12:215 13:205 14:182 15:144 16:147 17:123 18:165 19:140 20:125
+  ep1070/2000  reward=  194.1  ploss=-0.0017  entropy=0.658  EV=0.024  FPS=5632  ETA=180min
+         reward分量: goal=+0.916 | collision=-0.020 | distance=-0.023 | astar=+0.110 | anti_stuck=-0.204 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:292 9:295 10:310 11:228 12:203 13:206 14:211 15:144 16:136 17:145 18:130 19:147 20:113
+  ep1080/2000  reward=  189.3  ploss=-0.0018  entropy=0.662  EV=0.022  FPS=5485  ETA=183min
+         reward分量: goal=+0.920 | collision=-0.021 | distance=-0.023 | astar=+0.109 | anti_stuck=-0.201 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:298 9:298 10:289 11:204 12:196 13:216 14:217 15:145 16:122 17:152 18:150 19:140 20:133
+  ep1090/2000  reward=  205.6  ploss=-0.0018  entropy=0.608  EV=0.028  FPS=5349  ETA=186min
+         reward分量: goal=+0.928 | collision=-0.021 | distance=-0.022 | astar=+0.110 | anti_stuck=-0.190 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:296 9:255 10:282 11:225 12:223 13:220 14:206 15:138 16:148 17:159 18:139 19:139 20:130
+  ep1100/2000  reward=  213.2  ploss=-0.0016  entropy=0.624  EV=0.023  FPS=5219  ETA=188min
+         reward分量: goal=+0.932 | collision=-0.020 | distance=-0.023 | astar=+0.110 | anti_stuck=-0.191 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:285 9:309 10:253 11:203 12:200 13:206 14:208 15:151 16:135 17:129 18:169 19:157 20:155
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 1100/2000 - 训练评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  训练评估: 33/40 (82.5%)  ratio=1.06x  timeout=7  collision=0
+    small(8-12): 19/21 (90%)  timeout_dist=3.5  stay=22%  loop=2%
+    medium(13-17): 8/11 (73%)  timeout_dist=11.3  stay=20%  loop=7%
+    large(18-20): 6/8 (75%)  timeout_dist=5.0  stay=20%  loop=22%
+  ★ 新最佳模型! ep1100 (82.5%)
+  ep1110/2000  reward=  199.1  ploss=-0.0017  entropy=0.642  EV=0.026  FPS=5092  ETA=191min
+         reward分量: goal=+0.930 | collision=-0.019 | distance=-0.022 | astar=+0.111 | anti_stuck=-0.194 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:286 9:282 10:281 11:209 12:216 13:187 14:231 15:140 16:143 17:134 18:141 19:166 20:144
+  ep1120/2000  reward=  210.4  ploss=-0.0013  entropy=0.651  EV=0.024  FPS=4981  ETA=193min
+         reward分量: goal=+0.929 | collision=-0.019 | distance=-0.022 | astar=+0.111 | anti_stuck=-0.205 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:293 9:275 10:290 11:206 12:236 13:170 14:219 15:154 16:140 17:183 18:138 19:120 20:136
+  ep1130/2000  reward=  210.0  ploss=-0.0014  entropy=0.639  EV=0.022  FPS=4873  ETA=195min
+         reward分量: goal=+0.914 | collision=-0.020 | distance=-0.022 | astar=+0.110 | anti_stuck=-0.196 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:321 9:260 10:268 11:196 12:197 13:231 14:232 15:155 16:127 17:153 18:130 19:146 20:144
+  ep1140/2000  reward=  193.2  ploss=-0.0014  entropy=0.650  EV=0.026  FPS=4768  ETA=197min
+         reward分量: goal=+0.907 | collision=-0.019 | distance=-0.023 | astar=+0.109 | anti_stuck=-0.208 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:276 9:289 10:288 11:211 12:198 13:223 14:225 15:138 16:127 17:154 18:162 19:138 20:131
+  ep1150/2000  reward=  198.2  ploss=-0.0014  entropy=0.661  EV=0.028  FPS=4672  ETA=199min
+         reward分量: goal=+0.893 | collision=-0.020 | distance=-0.022 | astar=+0.109 | anti_stuck=-0.215 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:281 9:274 10:268 11:238 12:226 13:200 14:226 15:136 16:132 17:133 18:145 19:153 20:148
+  ep1160/2000  reward=  204.9  ploss=-0.0017  entropy=0.625  EV=0.021  FPS=4581  ETA=200min
+         reward分量: goal=+0.901 | collision=-0.019 | distance=-0.023 | astar=+0.110 | anti_stuck=-0.194 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:260 9:249 10:269 11:202 12:236 13:221 14:210 15:143 16:162 17:141 18:157 19:163 20:147
+  ep1170/2000  reward=  220.1  ploss=-0.0019  entropy=0.642  EV=0.024  FPS=4497  ETA=202min
+         reward分量: goal=+0.915 | collision=-0.020 | distance=-0.022 | astar=+0.109 | anti_stuck=-0.203 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:277 9:307 10:275 11:211 12:219 13:207 14:198 15:129 16:151 17:171 18:153 19:122 20:140
+  ep1180/2000  reward=  191.7  ploss=-0.0019  entropy=0.629  EV=0.022  FPS=4418  ETA=203min
+         reward分量: goal=+0.924 | collision=-0.020 | distance=-0.023 | astar=+0.110 | anti_stuck=-0.195 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:283 9:305 10:279 11:199 12:210 13:216 14:224 15:145 16:107 17:141 18:151 19:129 20:171
+  ep1190/2000  reward=  202.0  ploss=-0.0016  entropy=0.627  EV=0.024  FPS=4343  ETA=204min
+         reward分量: goal=+0.922 | collision=-0.020 | distance=-0.023 | astar=+0.110 | anti_stuck=-0.191 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:275 9:293 10:272 11:222 12:200 13:232 14:209 15:143 16:142 17:140 18:135 19:152 20:145
+  ep1200/2000  reward=  204.6  ploss=-0.0016  entropy=0.640  EV=0.026  FPS=4271  ETA=205min
+         reward分量: goal=+0.944 | collision=-0.020 | distance=-0.023 | astar=+0.111 | anti_stuck=-0.190 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:285 9:293 10:341 11:217 12:190 13:217 14:230 15:120 16:145 17:131 18:134 19:124 20:133
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 1200/2000 - 训练评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  训练评估: 33/40 (82.5%)  ratio=1.00x  timeout=6  collision=1
+    small(8-12): 15/18 (83%)  timeout_dist=7.0  stay=25%  loop=4%
+    medium(13-17): 8/8 (100%)  stay=17%  loop=0%
+    large(18-20): 10/14 (71%)  timeout_dist=7.2  stay=21%  loop=11%
+  ep1210/2000  reward=  203.3  ploss=-0.0016  entropy=0.650  EV=0.024  FPS=4195  ETA=206min
+         reward分量: goal=+0.921 | collision=-0.019 | distance=-0.023 | astar=+0.110 | anti_stuck=-0.194 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:262 9:271 10:288 11:211 12:247 13:218 14:200 15:144 16:139 17:137 18:163 19:135 20:145
+  ep1220/2000  reward=  201.4  ploss=-0.0015  entropy=0.636  EV=0.027  FPS=4126  ETA=207min
+         reward分量: goal=+0.919 | collision=-0.019 | distance=-0.022 | astar=+0.110 | anti_stuck=-0.200 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:292 9:292 10:270 11:196 12:204 13:234 14:225 15:131 16:144 17:142 18:145 19:140 20:145
+使用GPU进行训练...
+[断点续训] 复用已有目录: run1
+[restore] actor: 检测到维度不匹配, 执行部分权重加载
+  [partial] base.feature_norm.weight: saved torch.Size([55]) -> current torch.Size([104])
+  [partial] base.feature_norm.bias: saved torch.Size([55]) -> current torch.Size([104])
+  [partial] base.mlp.fc1.0.weight: saved torch.Size([256, 55]) -> current torch.Size([256, 104])
+[restore] critic: 检测到维度不匹配, 执行部分权重加载
+  [partial] base.feature_norm.weight: saved torch.Size([110]) -> current torch.Size([208])
+  [partial] base.feature_norm.bias: saved torch.Size([110]) -> current torch.Size([208])
+  [partial] base.mlp.fc1.0.weight: saved torch.Size([256, 110]) -> current torch.Size([256, 208])
+
+======================================================================
+  实验名称: v8_planE_B
+  运行目录: /workspace/zj/light_mappo-main/results/MyEnv/MyEnv/v8_planE_B/run1
+  训练模式: phase_b_only
+  设备: cuda:0
+======================================================================
+
+
+══════════════════════════════════════════════════════════════════════
+                    Phase B: PPO 训练
+══════════════════════════════════════════════════════════════════════
+  预训练模型: results/MyEnv/MyEnv/full_v8/run1/phase_a_astar/checkpoint_ep190/models
+  训练回合数: 2000
+  评估间隔: 每 100 回合 (自动保存模型)
+  并行环境: 256
+  网络结构: 256 × 4 层
+══════════════════════════════════════════════════════════════════════
+
+[Phase B] 从 checkpoint ep1200 恢复模型
+[Phase B] 跳过已有 1200 episodes, 从 Episode 1201 继续训练
+
+[课程阶段 3/4] 地图: 8-20, max_dist: 30
+  ep1210/2000  reward=  194.9  ploss=-0.0015  entropy=0.649  EV=0.023  FPS=165330  ETA=5min
+         reward分量: goal=+0.930 | collision=-0.019 | distance=-0.022 | astar=+0.111 | anti_stuck=-0.198 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:277 9:299 10:281 11:204 12:218 13:224 14:206 15:143 16:152 17:141 18:139 19:152 20:124
+  ep1220/2000  reward=  197.9  ploss=-0.0016  entropy=0.642  EV=0.025  FPS=77144  ETA=11min
+         reward分量: goal=+0.927 | collision=-0.019 | distance=-0.023 | astar=+0.110 | anti_stuck=-0.197 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:303 9:285 10:282 11:204 12:215 13:201 14:240 15:142 16:138 17:141 18:139 19:145 20:125
+  ep1230/2000  reward=  210.0  ploss=-0.0015  entropy=0.644  EV=0.023  FPS=52108  ETA=16min
+         reward分量: goal=+0.929 | collision=-0.018 | distance=-0.023 | astar=+0.111 | anti_stuck=-0.197 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:286 9:285 10:279 11:236 12:213 13:210 14:213 15:144 16:142 17:145 18:125 19:136 20:146
+  ep1240/2000  reward=  203.7  ploss=-0.0016  entropy=0.640  EV=0.023  FPS=39147  ETA=21min
+         reward分量: goal=+0.924 | collision=-0.019 | distance=-0.023 | astar=+0.111 | anti_stuck=-0.196 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:272 9:292 10:291 11:223 12:220 13:208 14:206 15:145 16:136 17:151 18:140 19:148 20:128
+  ep1250/2000  reward=  197.1  ploss=-0.0017  entropy=0.647  EV=0.025  FPS=31451  ETA=26min
+         reward分量: goal=+0.919 | collision=-0.019 | distance=-0.023 | astar=+0.110 | anti_stuck=-0.197 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:292 9:283 10:264 11:198 12:203 13:225 14:206 15:146 16:145 17:139 18:153 19:160 20:146
+  ep1260/2000  reward=  207.0  ploss=-0.0016  entropy=0.641  EV=0.022  FPS=26244  ETA=31min
+         reward分量: goal=+0.915 | collision=-0.020 | distance=-0.023 | astar=+0.110 | anti_stuck=-0.193 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:284 9:237 10:301 11:215 12:217 13:233 14:222 15:149 16:148 17:122 18:133 19:153 20:146
+  ep1270/2000  reward=  205.7  ploss=-0.0018  entropy=0.648  EV=0.021  FPS=22462  ETA=35min
+         reward分量: goal=+0.925 | collision=-0.020 | distance=-0.023 | astar=+0.111 | anti_stuck=-0.197 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:308 9:276 10:286 11:216 12:212 13:191 14:210 15:152 16:131 17:161 18:135 19:138 20:144
+  ep1280/2000  reward=  193.7  ploss=-0.0015  entropy=0.650  EV=0.027  FPS=19728  ETA=40min
+         reward分量: goal=+0.898 | collision=-0.018 | distance=-0.022 | astar=+0.110 | anti_stuck=-0.214 | stay=-0.001 | pbrs=+0.004 | wall=-0.010
+         地图分布(n=2560): 8:271 9:294 10:269 11:223 12:227 13:215 14:221 15:139 16:135 17:157 18:135 19:130 20:144
+  ep1290/2000  reward=  186.1  ploss=-0.0018  entropy=0.653  EV=0.025  FPS=17350  ETA=45min
+         reward分量: goal=+0.925 | collision=-0.019 | distance=-0.022 | astar=+0.110 | anti_stuck=-0.198 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:296 9:273 10:283 11:227 12:215 13:213 14:202 15:137 16:147 17:129 18:146 19:153 20:139
+  ep1300/2000  reward=  209.9  ploss=-0.0017  entropy=0.617  EV=0.025  FPS=15581  ETA=49min
+         reward分量: goal=+0.933 | collision=-0.019 | distance=-0.023 | astar=+0.110 | anti_stuck=-0.191 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:292 9:304 10:250 11:228 12:205 13:197 14:245 15:133 16:130 17:158 18:145 19:144 20:129
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 1300/2000 - 训练评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  训练评估: 31/40 (77.5%)  ratio=1.03x  timeout=9  collision=0
+    small(8-12): 18/19 (95%)  timeout_dist=3.5  stay=27%  loop=2%
+    medium(13-17): 8/14 (57%)  timeout_dist=4.3  stay=28%  loop=33%
+    large(18-20): 5/7 (71%)  timeout_dist=9.2  stay=17%  loop=3%
+  ★ 新最佳模型! ep1300 (77.5%)
+  ep1310/2000  reward=  208.2  ploss=-0.0017  entropy=0.654  EV=0.024  FPS=14044  ETA=54min
+         reward分量: goal=+0.946 | collision=-0.019 | distance=-0.022 | astar=+0.111 | anti_stuck=-0.187 | stay=-0.001 | pbrs=+0.004 | wall=-0.009
+         地图分布(n=2560): 8:307 9:287 10:281 11:213 12:220 13:227 14:231 15:144 16:140 17:140 18:125 19:129 20:116

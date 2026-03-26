@@ -167,8 +167,63 @@ class Runner(object):
             print("[警告] Phase A 未成功完成，跳过 Phase B")
             return
         
+        # Phase A→B 过渡：加载最佳 Phase A checkpoint
+        self._load_best_phase_a_model()
+        
         # Phase B
         self._run_phase_b()
+    
+    def _load_best_phase_a_model(self):
+        """扫描所有 Phase A eval_results.json，找到成功率最高的 checkpoint 并加载。
+        如果 Phase B 已有训练 checkpoint（非 ep000），则跳过（Phase B 自行恢复）。"""
+        import json, torch
+        phase_b_dir = Path(self.run_dir) / "phase_b_ppo"
+        if phase_b_dir.exists():
+            existing_b = [
+                d.name for d in phase_b_dir.iterdir()
+                if d.is_dir() and d.name.startswith("checkpoint_ep") and d.name != "checkpoint_ep000"
+            ]
+            if existing_b:
+                print(f"[Phase A→B] Phase B 已有 {len(existing_b)} 个训练 checkpoint，跳过 Phase A 模型加载（由 Phase B 续训恢复）")
+                return
+
+        phase_a_root = Path(self.run_dir) / "phase_a_astar"
+        if not phase_a_root.exists():
+            return
+        
+        best_ep, best_rate = None, -1.0
+        for ckpt_dir in sorted(phase_a_root.iterdir()):
+            if not ckpt_dir.name.startswith("checkpoint_ep"):
+                continue
+            eval_path = ckpt_dir / "eval_results.json"
+            if not eval_path.exists():
+                continue
+            try:
+                data = json.load(open(eval_path))
+                reached = sum(v.get("reached", 0) for v in data.values() if isinstance(v, dict))
+                total = sum(v.get("total_compared", 0) for v in data.values() if isinstance(v, dict))
+                rate = reached / total if total > 0 else 0
+                if rate > best_rate:
+                    best_rate = rate
+                    best_ep = ckpt_dir.name
+            except Exception:
+                continue
+        
+        if best_ep is None:
+            print("[Phase A→B] 未找到有效的 eval_results，使用当前模型")
+            return
+        
+        model_path = phase_a_root / best_ep / "models" / "actor.pt"
+        critic_path = phase_a_root / best_ep / "models" / "critic.pt"
+        if model_path.exists():
+            self.policy.actor.load_state_dict(
+                torch.load(str(model_path), map_location=self.device)
+            )
+        if critic_path.exists():
+            self.policy.critic.load_state_dict(
+                torch.load(str(critic_path), map_location=self.device)
+            )
+        print(f"[Phase A→B] 加载最佳 Phase A 模型: {best_ep} (成功率: {best_rate*100:.1f}%)")
     
     def _run_phase_a(self):
         """
@@ -200,38 +255,22 @@ class Runner(object):
     
     def _run_phase_b(self):
         """
-        运行 Phase B: 纯策略 PPO 训练
+        运行 Phase B: PPO 训练（使用 PhaseBRunner，支持 A* 奖励塑形 + 课程学习）
         """
-        print("\n" + "=" * 70)
-        print("                    Phase B: PPO 训练")
-        print("=" * 70)
-        
-        # 确保禁用 A* 引导
-        for env in self.envs.envs:
-            env.use_astar_first_episode = False
-            env.use_astar_shaping = False
-        self._reset_env_episode_count()
-        
-        # Phase B 目录
-        phase_b_dir = Path(self.run_dir) / "phase_b_policy"
-        phase_b_dir.mkdir(parents=True, exist_ok=True)
-        
-        # 更新保存目录
-        self.save_dir = str(phase_b_dir / "models")
-        self.log_dir = str(phase_b_dir / "logs")
-        os.makedirs(self.save_dir, exist_ok=True)
-        os.makedirs(self.log_dir, exist_ok=True)
-        
-        # 重新创建 TensorBoard writer
-        self.writter = SummaryWriter(self.log_dir)
-        
-        # 执行 PPO 训练
-        self._run_ppo_training(
-            episodes=self.all_args.phase_b_episodes,
-            render_interval=getattr(self.all_args, 'phase_b_render_interval', 100)
-        )
-        
-        print(f"\n[Phase B] 完成! 模型保存于: {self.save_dir}")
+        from runner.phase_b_runner import PhaseBRunner
+
+        phase_b_config = {
+            "all_args": self.all_args,
+            "envs": self.envs,
+            "policy": self.policy,
+            "trainer": self.trainer,
+            "buffer": self.buffer,
+            "device": self.device,
+            "run_dir": self.run_dir,
+            "num_agents": self.num_agents,
+        }
+        phase_b_runner = PhaseBRunner(phase_b_config)
+        phase_b_runner.run()
     
     def _run_legacy(self):
         """
@@ -500,12 +539,49 @@ class Runner(object):
         torch.save(policy_critic.state_dict(), str(self.save_dir) + "/critic.pt")
 
     def restore(self):
-        """从保存的模型中恢复策略网络。"""
+        """从保存的模型中恢复策略网络，支持观测维度变化时的部分权重加载。"""
         policy_actor_state_dict = torch.load(str(self.model_dir) + '/actor.pt')
-        self.policy.actor.load_state_dict(policy_actor_state_dict)
+        if not self._try_load_state_dict(self.policy.actor, policy_actor_state_dict, "actor"):
+            self.policy.actor.load_state_dict(policy_actor_state_dict)
         if not self.all_args.use_render:
             policy_critic_state_dict = torch.load(str(self.model_dir) + '/critic.pt')
-            self.policy.critic.load_state_dict(policy_critic_state_dict)
+            if not self._try_load_state_dict(self.policy.critic, policy_critic_state_dict, "critic"):
+                self.policy.critic.load_state_dict(policy_critic_state_dict)
+
+    def _try_load_state_dict(self, module, saved_state_dict, name="module"):
+        """
+        尝试部分加载权重。当输入维度变化时（如 obs_include_visit_history），
+        将共有维度的权重复制过来，新增维度用零初始化。
+        返回 True 表示做了部分加载，False 表示无需（维度完全匹配）。
+        """
+        import torch
+        current_state = module.state_dict()
+        need_partial = False
+        for key in saved_state_dict:
+            if key in current_state:
+                if saved_state_dict[key].shape != current_state[key].shape:
+                    need_partial = True
+                    break
+        if not need_partial:
+            return False
+
+        print(f"[restore] {name}: 检测到维度不匹配, 执行部分权重加载")
+        new_state = current_state.copy()
+        for key in saved_state_dict:
+            if key not in current_state:
+                continue
+            saved_tensor = saved_state_dict[key]
+            curr_tensor = current_state[key]
+            if saved_tensor.shape == curr_tensor.shape:
+                new_state[key] = saved_tensor
+            else:
+                print(f"  [partial] {key}: saved {saved_tensor.shape} -> current {curr_tensor.shape}")
+                new_t = torch.zeros_like(curr_tensor)
+                slices = tuple(slice(0, min(s, c)) for s, c in zip(saved_tensor.shape, curr_tensor.shape))
+                new_t[slices] = saved_tensor[slices]
+                new_state[key] = new_t
+        module.load_state_dict(new_state)
+        return True
  
     def log_train(self, train_infos, total_num_steps):
         """

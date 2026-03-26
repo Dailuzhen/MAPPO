@@ -1,0 +1,999 @@
+使用GPU进行训练...
+[INFO] Initialized random map mode, fixed size: 10x10
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] Initialized random map mode, fixed size: 10x10
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+[INFO] 观测维度: 31 (局部:25 + 额外:6)
+
+======================================================================
+  实验名称: phase_b_v5
+  运行目录: /workspace/zj/light_mappo-main/results/MyEnv/MyEnv/phase_b_v5/run1
+  训练模式: phase_b_only
+  设备: cuda:0
+======================================================================
+
+
+══════════════════════════════════════════════════════════════════════
+                    Phase B: PPO 训练
+══════════════════════════════════════════════════════════════════════
+  预训练模型: /workspace/zj/light_mappo-main/results/MyEnv/MyEnv/full_training_v13/run1/phase_a_astar/best_model
+  训练回合数: 1000
+  评估间隔: 每 50 回合 (自动保存模型)
+  并行环境: 64
+  网络结构: 256 × 4 层
+══════════════════════════════════════════════════════════════════════
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 0/1000 - 基线评估
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 0/20 (0.0%)
+  平均步数: 0.0
+  平均步数比: 0.00x (策略步数 / A* 步数)
+  碰撞: 1 次
+  超时: 19 次
+
+  ✓ 模型已保存: checkpoint_ep000/
+
+[Phase B] Episode 10/1000
+  Episode Reward: 292.5
+  Policy Loss: -0.0083 | Value Loss: 0.806
+  Entropy: 0.741 | Ratio: 0.995
+  FPS: 1664
+
+[Phase B] Episode 20/1000
+  Episode Reward: 446.9
+  Policy Loss: -0.0087 | Value Loss: 0.476
+  Entropy: 0.732 | Ratio: 0.997
+  FPS: 1676
+
+[Phase B] Episode 30/1000
+  Episode Reward: 489.2
+  Policy Loss: -0.0075 | Value Loss: 0.316
+  Entropy: 0.706 | Ratio: 0.997
+  FPS: 1673
+
+[Phase B] Episode 40/1000
+  Episode Reward: 484.0
+  Policy Loss: -0.0072 | Value Loss: 0.234
+  Entropy: 0.734 | Ratio: 0.998
+  FPS: 1668
+
+[Phase B] Episode 50/1000
+  Episode Reward: 496.3
+  Policy Loss: -0.0067 | Value Loss: 0.217
+  Entropy: 0.753 | Ratio: 0.998
+  FPS: 1664
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 50/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 6/20 (30.0%)
+  平均步数: 10.7
+  平均步数比: 1.02x (策略步数 / A* 步数)
+  碰撞: 1 次
+  超时: 13 次
+
+  ✓ 模型已保存: checkpoint_ep050/
+
+[Phase B] Episode 60/1000
+  Episode Reward: 478.3
+  Policy Loss: -0.0069 | Value Loss: 0.200
+  Entropy: 0.785 | Ratio: 0.998
+  FPS: 1579
+
+[Phase B] Episode 70/1000
+  Episode Reward: 500.4
+  Policy Loss: -0.0068 | Value Loss: 0.219
+  Entropy: 0.779 | Ratio: 0.998
+  FPS: 1589
+
+[Phase B] Episode 80/1000
+  Episode Reward: 488.6
+  Policy Loss: -0.0069 | Value Loss: 0.208
+  Entropy: 0.812 | Ratio: 0.999
+  FPS: 1597
+
+[Phase B] Episode 90/1000
+  Episode Reward: 493.6
+  Policy Loss: -0.0063 | Value Loss: 0.212
+  Entropy: 0.813 | Ratio: 0.999
+  FPS: 1603
+
+[Phase B] Episode 100/1000
+  Episode Reward: 507.0
+  Policy Loss: -0.0062 | Value Loss: 0.214
+  Entropy: 0.804 | Ratio: 0.999
+  FPS: 1608
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 100/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 9/20 (45.0%)
+  平均步数: 12.7
+  平均步数比: 0.93x (策略步数 / A* 步数)
+  碰撞: 1 次
+  超时: 10 次
+
+  ✓ 模型已保存: checkpoint_ep100/
+
+[Phase B] Episode 110/1000
+  Episode Reward: 516.5
+  Policy Loss: -0.0067 | Value Loss: 0.226
+  Entropy: 0.811 | Ratio: 0.999
+  FPS: 1576
+
+[Phase B] Episode 120/1000
+  Episode Reward: 502.3
+  Policy Loss: -0.0066 | Value Loss: 0.234
+  Entropy: 0.857 | Ratio: 0.999
+  FPS: 1582
+
+[Phase B] Episode 130/1000
+  Episode Reward: 528.8
+  Policy Loss: -0.0060 | Value Loss: 0.246
+  Entropy: 0.805 | Ratio: 0.999
+  FPS: 1586
+
+[Phase B] Episode 140/1000
+  Episode Reward: 525.3
+  Policy Loss: -0.0062 | Value Loss: 0.256
+  Entropy: 0.842 | Ratio: 0.999
+  FPS: 1591
+
+[Phase B] Episode 150/1000
+  Episode Reward: 520.5
+  Policy Loss: -0.0061 | Value Loss: 0.252
+  Entropy: 0.816 | Ratio: 0.999
+  FPS: 1595
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 150/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 12/20 (60.0%)
+  平均步数: 11.9
+  平均步数比: 0.87x (策略步数 / A* 步数)
+  碰撞: 1 次
+  超时: 7 次
+
+  ✓ 模型已保存: checkpoint_ep150/
+
+[Phase B] Episode 160/1000
+  Episode Reward: 521.7
+  Policy Loss: -0.0064 | Value Loss: 0.255
+  Entropy: 0.854 | Ratio: 0.999
+  FPS: 1580
+
+[Phase B] Episode 170/1000
+  Episode Reward: 529.8
+  Policy Loss: -0.0065 | Value Loss: 0.276
+  Entropy: 0.858 | Ratio: 0.999
+  FPS: 1584
+
+[Phase B] Episode 180/1000
+  Episode Reward: 534.3
+  Policy Loss: -0.0057 | Value Loss: 0.288
+  Entropy: 0.863 | Ratio: 0.998
+  FPS: 1588
+
+[Phase B] Episode 190/1000
+  Episode Reward: 529.3
+  Policy Loss: -0.0060 | Value Loss: 0.266
+  Entropy: 0.862 | Ratio: 0.999
+  FPS: 1591
+
+[Phase B] Episode 200/1000
+  Episode Reward: 533.2
+  Policy Loss: -0.0055 | Value Loss: 0.286
+  Entropy: 0.853 | Ratio: 0.998
+  FPS: 1594
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 200/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 13/20 (65.0%)
+  平均步数: 11.8
+  平均步数比: 0.86x (策略步数 / A* 步数)
+  碰撞: 1 次
+  超时: 6 次
+
+  ✓ 模型已保存: checkpoint_ep200/
+
+[Phase B] Episode 210/1000
+  Episode Reward: 531.5
+  Policy Loss: -0.0062 | Value Loss: 0.298
+  Entropy: 0.890 | Ratio: 0.999
+  FPS: 1583
+
+[Phase B] Episode 220/1000
+  Episode Reward: 531.4
+  Policy Loss: -0.0059 | Value Loss: 0.285
+  Entropy: 0.857 | Ratio: 0.999
+  FPS: 1586
+
+[Phase B] Episode 230/1000
+  Episode Reward: 539.2
+  Policy Loss: -0.0052 | Value Loss: 0.308
+  Entropy: 0.862 | Ratio: 0.999
+  FPS: 1589
+
+[Phase B] Episode 240/1000
+  Episode Reward: 530.0
+  Policy Loss: -0.0058 | Value Loss: 0.303
+  Entropy: 0.874 | Ratio: 0.999
+  FPS: 1591
+
+[Phase B] Episode 250/1000
+  Episode Reward: 545.6
+  Policy Loss: -0.0062 | Value Loss: 0.308
+  Entropy: 0.897 | Ratio: 0.999
+  FPS: 1594
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 250/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 11/20 (55.0%)
+  平均步数: 12.7
+  平均步数比: 0.98x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 9 次
+
+  ✓ 模型已保存: checkpoint_ep250/
+
+[Phase B] Episode 260/1000
+  Episode Reward: 537.7
+  Policy Loss: -0.0053 | Value Loss: 0.298
+  Entropy: 0.875 | Ratio: 0.999
+  FPS: 1583
+
+[Phase B] Episode 270/1000
+  Episode Reward: 544.7
+  Policy Loss: -0.0056 | Value Loss: 0.321
+  Entropy: 0.883 | Ratio: 0.999
+  FPS: 1585
+
+[Phase B] Episode 280/1000
+  Episode Reward: 520.6
+  Policy Loss: -0.0059 | Value Loss: 0.301
+  Entropy: 0.858 | Ratio: 0.999
+  FPS: 1587
+
+[Phase B] Episode 290/1000
+  Episode Reward: 541.7
+  Policy Loss: -0.0055 | Value Loss: 0.318
+  Entropy: 0.862 | Ratio: 0.999
+  FPS: 1589
+
+[Phase B] Episode 300/1000
+  Episode Reward: 541.0
+  Policy Loss: -0.0048 | Value Loss: 0.314
+  Entropy: 0.870 | Ratio: 0.999
+  FPS: 1591
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 300/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 12/20 (60.0%)
+  平均步数: 9.8
+  平均步数比: 0.91x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 8 次
+
+  ✓ 模型已保存: checkpoint_ep300/
+
+[Phase B] Episode 310/1000
+  Episode Reward: 529.1
+  Policy Loss: -0.0060 | Value Loss: 0.317
+  Entropy: 0.869 | Ratio: 0.999
+  FPS: 1584
+
+[Phase B] Episode 320/1000
+  Episode Reward: 515.0
+  Policy Loss: -0.0058 | Value Loss: 0.313
+  Entropy: 0.923 | Ratio: 0.999
+  FPS: 1586
+
+[Phase B] Episode 330/1000
+  Episode Reward: 535.5
+  Policy Loss: -0.0052 | Value Loss: 0.328
+  Entropy: 0.890 | Ratio: 1.000
+  FPS: 1587
+
+[Phase B] Episode 340/1000
+  Episode Reward: 517.3
+  Policy Loss: -0.0059 | Value Loss: 0.323
+  Entropy: 0.887 | Ratio: 0.999
+  FPS: 1589
+
+[Phase B] Episode 350/1000
+  Episode Reward: 546.8
+  Policy Loss: -0.0067 | Value Loss: 0.351
+  Entropy: 0.916 | Ratio: 0.999
+  FPS: 1591
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 350/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 13/20 (65.0%)
+  平均步数: 12.7
+  平均步数比: 0.87x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 7 次
+
+  ✓ 模型已保存: checkpoint_ep350/
+
+[Phase B] Episode 360/1000
+  Episode Reward: 536.1
+  Policy Loss: -0.0061 | Value Loss: 0.343
+  Entropy: 0.903 | Ratio: 0.999
+  FPS: 1585
+
+[Phase B] Episode 370/1000
+  Episode Reward: 512.2
+  Policy Loss: -0.0051 | Value Loss: 0.327
+  Entropy: 0.892 | Ratio: 0.999
+  FPS: 1587
+
+[Phase B] Episode 380/1000
+  Episode Reward: 531.7
+  Policy Loss: -0.0056 | Value Loss: 0.348
+  Entropy: 0.903 | Ratio: 0.999
+  FPS: 1589
+
+[Phase B] Episode 390/1000
+  Episode Reward: 537.1
+  Policy Loss: -0.0054 | Value Loss: 0.350
+  Entropy: 0.884 | Ratio: 0.999
+  FPS: 1590
+
+[Phase B] Episode 400/1000
+  Episode Reward: 538.5
+  Policy Loss: -0.0060 | Value Loss: 0.345
+  Entropy: 0.876 | Ratio: 0.999
+  FPS: 1592
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 400/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 13/20 (65.0%)
+  平均步数: 8.8
+  平均步数比: 1.02x (策略步数 / A* 步数)
+  碰撞: 1 次
+  超时: 6 次
+
+  ✓ 模型已保存: checkpoint_ep400/
+
+[Phase B] Episode 410/1000
+  Episode Reward: 557.0
+  Policy Loss: -0.0052 | Value Loss: 0.361
+  Entropy: 0.869 | Ratio: 1.000
+  FPS: 1587
+
+[Phase B] Episode 420/1000
+  Episode Reward: 557.5
+  Policy Loss: -0.0058 | Value Loss: 0.360
+  Entropy: 0.850 | Ratio: 0.999
+  FPS: 1588
+
+[Phase B] Episode 430/1000
+  Episode Reward: 548.7
+  Policy Loss: -0.0055 | Value Loss: 0.379
+  Entropy: 0.892 | Ratio: 1.000
+  FPS: 1590
+
+[Phase B] Episode 440/1000
+  Episode Reward: 543.6
+  Policy Loss: -0.0055 | Value Loss: 0.370
+  Entropy: 0.877 | Ratio: 0.999
+  FPS: 1591
+
+[Phase B] Episode 450/1000
+  Episode Reward: 552.4
+  Policy Loss: -0.0046 | Value Loss: 0.363
+  Entropy: 0.845 | Ratio: 1.000
+  FPS: 1592
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 450/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 14/20 (70.0%)
+  平均步数: 11.4
+  平均步数比: 0.86x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 6 次
+
+  ✓ 模型已保存: checkpoint_ep450/
+
+[Phase B] Episode 460/1000
+  Episode Reward: 553.1
+  Policy Loss: -0.0051 | Value Loss: 0.379
+  Entropy: 0.887 | Ratio: 0.999
+  FPS: 1588
+
+[Phase B] Episode 470/1000
+  Episode Reward: 545.8
+  Policy Loss: -0.0054 | Value Loss: 0.384
+  Entropy: 0.914 | Ratio: 0.999
+  FPS: 1589
+
+[Phase B] Episode 480/1000
+  Episode Reward: 546.2
+  Policy Loss: -0.0051 | Value Loss: 0.374
+  Entropy: 0.900 | Ratio: 0.999
+  FPS: 1590
+
+[Phase B] Episode 490/1000
+  Episode Reward: 557.4
+  Policy Loss: -0.0053 | Value Loss: 0.385
+  Entropy: 0.859 | Ratio: 0.999
+  FPS: 1592
+
+[Phase B] Episode 500/1000
+  Episode Reward: 557.9
+  Policy Loss: -0.0050 | Value Loss: 0.404
+  Entropy: 0.914 | Ratio: 1.000
+  FPS: 1593
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 500/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 11/20 (55.0%)
+  平均步数: 14.5
+  平均步数比: 1.14x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 9 次
+
+  ✓ 模型已保存: checkpoint_ep500/
+
+[Phase B] Episode 510/1000
+  Episode Reward: 542.0
+  Policy Loss: -0.0053 | Value Loss: 0.383
+  Entropy: 0.871 | Ratio: 1.000
+  FPS: 1587
+
+[Phase B] Episode 520/1000
+  Episode Reward: 564.9
+  Policy Loss: -0.0059 | Value Loss: 0.409
+  Entropy: 0.893 | Ratio: 0.999
+  FPS: 1588
+
+[Phase B] Episode 530/1000
+  Episode Reward: 548.0
+  Policy Loss: -0.0059 | Value Loss: 0.375
+  Entropy: 0.896 | Ratio: 0.999
+  FPS: 1590
+
+[Phase B] Episode 540/1000
+  Episode Reward: 565.4
+  Policy Loss: -0.0057 | Value Loss: 0.394
+  Entropy: 0.910 | Ratio: 1.000
+  FPS: 1591
+
+[Phase B] Episode 550/1000
+  Episode Reward: 579.3
+  Policy Loss: -0.0047 | Value Loss: 0.418
+  Entropy: 0.905 | Ratio: 1.000
+  FPS: 1592
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 550/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 12/20 (60.0%)
+  平均步数: 12.3
+  平均步数比: 0.94x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 8 次
+
+  ✓ 模型已保存: checkpoint_ep550/
+
+[Phase B] Episode 560/1000
+  Episode Reward: 566.4
+  Policy Loss: -0.0054 | Value Loss: 0.413
+  Entropy: 0.904 | Ratio: 1.000
+  FPS: 1588
+
+[Phase B] Episode 570/1000
+  Episode Reward: 575.8
+  Policy Loss: -0.0054 | Value Loss: 0.429
+  Entropy: 0.902 | Ratio: 1.000
+  FPS: 1589
+
+[Phase B] Episode 580/1000
+  Episode Reward: 572.9
+  Policy Loss: -0.0051 | Value Loss: 0.414
+  Entropy: 0.896 | Ratio: 0.999
+  FPS: 1590
+
+[Phase B] Episode 590/1000
+  Episode Reward: 556.8
+  Policy Loss: -0.0055 | Value Loss: 0.400
+  Entropy: 0.900 | Ratio: 0.999
+  FPS: 1591
+
+[Phase B] Episode 600/1000
+  Episode Reward: 531.5
+  Policy Loss: -0.0051 | Value Loss: 0.368
+  Entropy: 0.930 | Ratio: 0.999
+  FPS: 1592
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 600/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 7/20 (35.0%)
+  平均步数: 10.3
+  平均步数比: 1.06x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 13 次
+
+  ✓ 模型已保存: checkpoint_ep600/
+
+[Phase B] Episode 610/1000
+  Episode Reward: 557.0
+  Policy Loss: -0.0049 | Value Loss: 0.384
+  Entropy: 0.918 | Ratio: 0.999
+  FPS: 1585
+
+[Phase B] Episode 620/1000
+  Episode Reward: 553.5
+  Policy Loss: -0.0055 | Value Loss: 0.391
+  Entropy: 0.867 | Ratio: 0.999
+  FPS: 1586
+
+[Phase B] Episode 630/1000
+  Episode Reward: 575.7
+  Policy Loss: -0.0055 | Value Loss: 0.405
+  Entropy: 0.889 | Ratio: 1.000
+  FPS: 1587
+
+[Phase B] Episode 640/1000
+  Episode Reward: 564.7
+  Policy Loss: -0.0047 | Value Loss: 0.402
+  Entropy: 0.901 | Ratio: 0.999
+  FPS: 1588
+
+[Phase B] Episode 650/1000
+  Episode Reward: 549.6
+  Policy Loss: -0.0050 | Value Loss: 0.416
+  Entropy: 0.908 | Ratio: 0.999
+  FPS: 1589
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 650/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 11/20 (55.0%)
+  平均步数: 10.6
+  平均步数比: 0.80x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 9 次
+
+  ✓ 模型已保存: checkpoint_ep650/
+
+[Phase B] Episode 660/1000
+  Episode Reward: 569.4
+  Policy Loss: -0.0048 | Value Loss: 0.406
+  Entropy: 0.902 | Ratio: 1.000
+  FPS: 1585
+
+[Phase B] Episode 670/1000
+  Episode Reward: 576.4
+  Policy Loss: -0.0047 | Value Loss: 0.408
+  Entropy: 0.842 | Ratio: 0.999
+  FPS: 1586
+
+[Phase B] Episode 680/1000
+  Episode Reward: 577.9
+  Policy Loss: -0.0051 | Value Loss: 0.424
+  Entropy: 0.860 | Ratio: 1.000
+  FPS: 1587
+
+[Phase B] Episode 690/1000
+  Episode Reward: 559.0
+  Policy Loss: -0.0054 | Value Loss: 0.413
+  Entropy: 0.880 | Ratio: 1.000
+  FPS: 1588
+
+[Phase B] Episode 700/1000
+  Episode Reward: 567.9
+  Policy Loss: -0.0054 | Value Loss: 0.418
+  Entropy: 0.890 | Ratio: 0.999
+  FPS: 1588
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 700/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 12/20 (60.0%)
+  平均步数: 13.0
+  平均步数比: 0.97x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 8 次
+
+  ✓ 模型已保存: checkpoint_ep700/
+
+[Phase B] Episode 710/1000
+  Episode Reward: 556.8
+  Policy Loss: -0.0054 | Value Loss: 0.409
+  Entropy: 0.937 | Ratio: 0.999
+  FPS: 1585
+
+[Phase B] Episode 720/1000
+  Episode Reward: 581.4
+  Policy Loss: -0.0052 | Value Loss: 0.426
+  Entropy: 0.904 | Ratio: 0.999
+  FPS: 1586
+
+[Phase B] Episode 730/1000
+  Episode Reward: 560.9
+  Policy Loss: -0.0053 | Value Loss: 0.425
+  Entropy: 0.915 | Ratio: 0.999
+  FPS: 1587
+
+[Phase B] Episode 740/1000
+  Episode Reward: 567.7
+  Policy Loss: -0.0051 | Value Loss: 0.406
+  Entropy: 0.902 | Ratio: 1.000
+  FPS: 1587
+
+[Phase B] Episode 750/1000
+  Episode Reward: 546.6
+  Policy Loss: -0.0048 | Value Loss: 0.399
+  Entropy: 0.908 | Ratio: 1.000
+  FPS: 1588
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 750/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 16/20 (80.0%)
+  平均步数: 12.0
+  平均步数比: 0.76x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 4 次
+
+  ✓ 模型已保存: checkpoint_ep750/
+
+[Phase B] Episode 760/1000
+  Episode Reward: 556.4
+  Policy Loss: -0.0053 | Value Loss: 0.428
+  Entropy: 0.913 | Ratio: 0.999
+  FPS: 1587
+
+[Phase B] Episode 770/1000
+  Episode Reward: 544.2
+  Policy Loss: -0.0053 | Value Loss: 0.412
+  Entropy: 0.925 | Ratio: 0.999
+  FPS: 1588
+
+[Phase B] Episode 780/1000
+  Episode Reward: 578.1
+  Policy Loss: -0.0061 | Value Loss: 0.442
+  Entropy: 0.905 | Ratio: 0.999
+  FPS: 1588
+
+[Phase B] Episode 790/1000
+  Episode Reward: 562.6
+  Policy Loss: -0.0058 | Value Loss: 0.428
+  Entropy: 0.924 | Ratio: 0.999
+  FPS: 1589
+
+[Phase B] Episode 800/1000
+  Episode Reward: 545.7
+  Policy Loss: -0.0048 | Value Loss: 0.398
+  Entropy: 0.914 | Ratio: 1.000
+  FPS: 1590
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 800/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 13/20 (65.0%)
+  平均步数: 13.7
+  平均步数比: 0.89x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 7 次
+
+  ✓ 模型已保存: checkpoint_ep800/
+
+[Phase B] Episode 810/1000
+  Episode Reward: 581.1
+  Policy Loss: -0.0042 | Value Loss: 0.435
+  Entropy: 0.875 | Ratio: 1.000
+  FPS: 1587
+
+[Phase B] Episode 820/1000
+  Episode Reward: 578.3
+  Policy Loss: -0.0052 | Value Loss: 0.431
+  Entropy: 0.930 | Ratio: 0.999
+  FPS: 1588
+
+[Phase B] Episode 830/1000
+  Episode Reward: 558.5
+  Policy Loss: -0.0056 | Value Loss: 0.421
+  Entropy: 0.926 | Ratio: 0.999
+  FPS: 1588
+
+[Phase B] Episode 840/1000
+  Episode Reward: 572.3
+  Policy Loss: -0.0043 | Value Loss: 0.399
+  Entropy: 0.865 | Ratio: 1.000
+  FPS: 1589
+
+[Phase B] Episode 850/1000
+  Episode Reward: 545.2
+  Policy Loss: -0.0050 | Value Loss: 0.395
+  Entropy: 0.883 | Ratio: 1.000
+  FPS: 1590
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 850/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 16/20 (80.0%)
+  平均步数: 13.5
+  平均步数比: 0.99x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 4 次
+
+  ✓ 模型已保存: checkpoint_ep850/
+
+[Phase B] Episode 860/1000
+  Episode Reward: 560.2
+  Policy Loss: -0.0053 | Value Loss: 0.412
+  Entropy: 0.909 | Ratio: 0.999
+  FPS: 1588
+
+[Phase B] Episode 870/1000
+  Episode Reward: 579.1
+  Policy Loss: -0.0048 | Value Loss: 0.424
+  Entropy: 0.874 | Ratio: 1.000
+  FPS: 1589
+
+[Phase B] Episode 880/1000
+  Episode Reward: 578.8
+  Policy Loss: -0.0044 | Value Loss: 0.421
+  Entropy: 0.898 | Ratio: 0.999
+  FPS: 1590
+
+[Phase B] Episode 890/1000
+  Episode Reward: 575.8
+  Policy Loss: -0.0052 | Value Loss: 0.421
+  Entropy: 0.917 | Ratio: 1.000
+  FPS: 1590
+
+[Phase B] Episode 900/1000
+  Episode Reward: 557.4
+  Policy Loss: -0.0049 | Value Loss: 0.417
+  Entropy: 0.908 | Ratio: 1.000
+  FPS: 1591
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 900/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 14/20 (70.0%)
+  平均步数: 11.1
+  平均步数比: 0.75x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 6 次
+
+  ✓ 模型已保存: checkpoint_ep900/
+
+[Phase B] Episode 910/1000
+  Episode Reward: 566.7
+  Policy Loss: -0.0049 | Value Loss: 0.421
+  Entropy: 0.875 | Ratio: 1.000
+  FPS: 1589
+
+[Phase B] Episode 920/1000
+  Episode Reward: 567.0
+  Policy Loss: -0.0050 | Value Loss: 0.407
+  Entropy: 0.893 | Ratio: 0.999
+  FPS: 1589
+
+[Phase B] Episode 930/1000
+  Episode Reward: 571.8
+  Policy Loss: -0.0054 | Value Loss: 0.430
+  Entropy: 0.884 | Ratio: 1.000
+  FPS: 1590
+
+[Phase B] Episode 940/1000
+  Episode Reward: 578.6
+  Policy Loss: -0.0048 | Value Loss: 0.447
+  Entropy: 0.937 | Ratio: 1.000
+  FPS: 1590
+
+[Phase B] Episode 950/1000
+  Episode Reward: 566.2
+  Policy Loss: -0.0050 | Value Loss: 0.420
+  Entropy: 0.895 | Ratio: 0.999
+  FPS: 1591
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 950/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 13/20 (65.0%)
+  平均步数: 11.0
+  平均步数比: 0.94x (策略步数 / A* 步数)
+  碰撞: 0 次
+  超时: 7 次
+
+  ✓ 模型已保存: checkpoint_ep950/
+
+[Phase B] Episode 960/1000
+  Episode Reward: 581.7
+  Policy Loss: -0.0058 | Value Loss: 0.445
+  Entropy: 0.878 | Ratio: 0.999
+  FPS: 1589
+
+[Phase B] Episode 970/1000
+  Episode Reward: 564.8
+  Policy Loss: -0.0045 | Value Loss: 0.446
+  Entropy: 0.930 | Ratio: 1.000
+  FPS: 1589
+
+[Phase B] Episode 980/1000
+  Episode Reward: 574.7
+  Policy Loss: -0.0053 | Value Loss: 0.436
+  Entropy: 0.915 | Ratio: 0.999
+  FPS: 1590
+
+[Phase B] Episode 990/1000
+  Episode Reward: 569.1
+  Policy Loss: -0.0049 | Value Loss: 0.427
+  Entropy: 0.909 | Ratio: 1.000
+  FPS: 1591
+
+[Phase B] Episode 1000/1000
+  Episode Reward: 561.8
+  Policy Loss: -0.0051 | Value Loss: 0.436
+  Entropy: 0.945 | Ratio: 1.000
+  FPS: 1591
+
+──────────────────────────────────────────────────────────────────────
+[Phase B] Episode 1000/1000 - 评估 & 保存
+──────────────────────────────────────────────────────────────────────
+  [评估] 使用 Phase A 训练场景 (5299 个可用)
+  测试场景: 20 个
+  成功: 14/20 (70.0%)
+  平均步数: 14.1
+  平均步数比: 1.10x (策略步数 / A* 步数)
+  碰撞: 1 次
+  超时: 5 次
+
+  ✓ 模型已保存: checkpoint_ep1000/
+
+══════════════════════════════════════════════════════════════════════
+[Phase B] 训练完成！
+══════════════════════════════════════════════════════════════════════
+  总耗时: 134.3 分钟
+
+  训练效果对比:
+  ┌──────────┬──────────┬──────────┬─────────────┐
+  │   回合   │  成功率   │ 步数比   │   模型      │
+  ├──────────┼──────────┼──────────┼─────────────┤
+  │   ep000  │    0.0%  │   0.00x  │ ✓ baseline  │
+  │   ep050  │   30.0%  │   1.02x  │ ✓ saved     │
+  │   ep100  │   45.0%  │   0.93x  │ ✓ saved     │
+  │   ep150  │   60.0%  │   0.87x  │ ✓ saved     │
+  │   ep200  │   65.0%  │   0.86x  │ ✓ saved     │
+  │   ep250  │   55.0%  │   0.98x  │ ✓ saved     │
+  │   ep300  │   60.0%  │   0.91x  │ ✓ saved     │
+  │   ep350  │   65.0%  │   0.87x  │ ✓ saved     │
+  │   ep400  │   65.0%  │   1.02x  │ ✓ saved     │
+  │   ep450  │   70.0%  │   0.86x  │ ✓ saved     │
+  │   ep500  │   55.0%  │   1.14x  │ ✓ saved     │
+  │   ep550  │   60.0%  │   0.94x  │ ✓ saved     │
+  │   ep600  │   35.0%  │   1.06x  │ ✓ saved     │
+  │   ep650  │   55.0%  │   0.80x  │ ✓ saved     │
+  │   ep700  │   60.0%  │   0.97x  │ ✓ saved     │
+  │   ep750  │   80.0%  │   0.76x  │ ✓ saved     │
+  │   ep800  │   65.0%  │   0.89x  │ ✓ saved     │
+  │   ep850  │   80.0%  │   0.99x  │ ✓ saved     │
+  │   ep900  │   70.0%  │   0.75x  │ ✓ saved     │
+  │   ep950  │   65.0%  │   0.94x  │ ✓ saved     │
+  │   ep1000  │   70.0%  │   1.10x  │ ✓ final     │
+  └──────────┴──────────┴──────────┴─────────────┘
+
+  共保存 21 个 checkpoint
+  保存位置: /workspace/zj/light_mappo-main/results/MyEnv/MyEnv/phase_b_v5/run1/phase_b_ppo
+══════════════════════════════════════════════════════════════════════
+

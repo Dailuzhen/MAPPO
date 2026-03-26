@@ -243,6 +243,10 @@ def get_config():
     # Phase B 参数（纯策略 PPO 训练）
     parser.add_argument("--phase_b_episodes", type=int, default=900,
                         help="Phase B: 纯策略PPO训练的episode数")
+    parser.add_argument("--phase_b_eval_interval", type=int, default=50,
+                        help="Phase B: 评估间隔（episode数）")
+    parser.add_argument("--phase_b_eval_scenarios", type=int, default=40,
+                        help="Phase B: 每次评估的随机场景数")
     parser.add_argument("--phase_b_render_interval", type=int, default=100,
                         help="Phase B: 渲染gif的间隔")
     
@@ -262,6 +266,50 @@ def get_config():
     parser.add_argument("--gif_fps", type=float, default=10.0, help="GIF帧率（每秒帧数）")
     parser.add_argument("--save_frames", action="store_true", default=False, help="是否逐帧保存渲染图像")
     parser.add_argument("--frames_dir", type=str, default="renders/frames", help="逐帧图片保存目录（相对于run_dir或绝对路径）")
+    
+    # 地图多样性参数
+    parser.add_argument("--map_size_min", type=int, default=8, help="随机地图最小尺寸")
+    parser.add_argument("--map_size_max", type=int, default=20, help="随机地图最大尺寸")
+    parser.add_argument("--map_change_interval", type=int, default=5, help="地图更换间隔（episode数），0=不更换")
+    parser.add_argument("--obs_radius", type=int, default=2, help="智能体局部观测半径 (obs_radius=2→5x5, =3→7x7)")
+
+    # v8/v9: 观测增强参数
+    parser.add_argument("--obs_include_goal_direction", action="store_true", default=False,
+                        help="是否在观测中包含目标方向 (dx, dy, dist, at_goal)")
+    parser.add_argument("--obs_include_position", action="store_true", default=False,
+                        help="是否在观测中包含当前位置归一化坐标")
+    
+    # v9: 访问历史观测
+    parser.add_argument("--obs_include_visit_history", action="store_true", default=False,
+                        help="v9: 是否在观测中包含局部访问历史热力图")
+    parser.add_argument("--visit_history_length", type=int, default=20,
+                        help="v9: 访问历史回溯步数")
+    
+    # v9: 奖励优化
+    parser.add_argument("--use_pbrs", action="store_true", default=False,
+                        help="v9: 是否使用势能差分奖励塑形 (PBRS)")
+    parser.add_argument("--scale_reward_by_size", action="store_true", default=False,
+                        help="v9: 是否按地图尺寸缩放奖励（距离惩罚不归一化、到达奖励缩放）")
+    
+    # planE: 奖励改进
+    parser.add_argument("--use_first_reach_reward", action="store_true", default=False,
+                        help="planE: 首次到达+10, stay+0.1, 全体到达+5 (防止stay刷分)")
+    parser.add_argument("--use_wall_penalty", action="store_true", default=False,
+                        help="planE: 撞墙惩罚 -0.1 (显式惩罚无效动作)")
+    
+    # v9: 独立验证 + 早停
+    parser.add_argument("--val_interval", type=int, default=0,
+                        help="v9: 独立验证间隔（0=禁用）")
+    parser.add_argument("--val_scenarios", type=int, default=100,
+                        help="v9: 独立验证场景数")
+    parser.add_argument("--val_patience", type=int, default=3,
+                        help="v9: 早停耐心（连续N次验证无提升则停止）")
+    parser.add_argument("--curriculum_stages", type=int, default=4,
+                        help="v9: 课程学习阶段数 (4=v8, 5=v9)")
+
+    # 断点续训参数
+    parser.add_argument("--resume_run", type=str, default=None,
+                        help="断点续训：指定已有的run目录名（如 run1），将复用该目录而非新建")
     
     # 预训练参数
     parser.add_argument("--model_dir", type=str, default=None, help="默认None，设置预训练模型的路径")
