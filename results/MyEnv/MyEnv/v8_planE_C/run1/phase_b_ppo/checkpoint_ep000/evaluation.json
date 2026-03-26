@@ -1,0 +1,43 @@
+{
+  "success_rate": 0.675,
+  "successes": 27,
+  "timeouts": 12,
+  "collisions": 1,
+  "total_scenarios": 40,
+  "avg_steps": 9.666666666666666,
+  "avg_step_ratio": 1.044,
+  "timeout_rate": 0.3,
+  "collision_rate": 0.025,
+  "diag": {
+    "small(8-12)": {
+      "avg_stay_ratio": 0.21167780937011707,
+      "avg_loop_rate": 0.1252136752136752,
+      "avg_timeout_dist": 4.7
+    },
+    "medium(13-17)": {
+      "avg_stay_ratio": 0.1608850207763251,
+      "avg_loop_rate": 0.46098901098901107,
+      "avg_timeout_dist": 5.142857142857143
+    }
+  },
+  "avg_timeout_dist": 4.958333333333333,
+  "avg_stay_ratio": 0.19390033336228987,
+  "avg_loop_rate": 0.24273504273504276,
+  "episode": 0,
+  "type": "baseline",
+  "source_model": "results/MyEnv/MyEnv/full_v8/run1/phase_a_astar/checkpoint_ep190/models",
+  "size_stats": {
+    "small(8-12)": {
+      "success": 21,
+      "total": 26,
+      "timeout": 5,
+      "collision": 0
+    },
+    "medium(13-17)": {
+      "success": 6,
+      "total": 14,
+      "timeout": 7,
+      "collision": 1
+    }
+  }
+}

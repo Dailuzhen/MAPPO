@@ -1,0 +1,54 @@
+{
+  "success_rate": 0.85,
+  "successes": 34,
+  "timeouts": 5,
+  "collisions": 1,
+  "total_scenarios": 40,
+  "avg_steps": 12.0,
+  "avg_step_ratio": 1.0251256281407035,
+  "timeout_rate": 0.125,
+  "collision_rate": 0.025,
+  "diag": {
+    "small(8-12)": {
+      "avg_stay_ratio": 0.24870891454224786,
+      "avg_loop_rate": 0.0601010101010101,
+      "avg_timeout_dist": 3.5
+    },
+    "medium(13-17)": {
+      "avg_stay_ratio": 0.23597498090145147,
+      "avg_loop_rate": 0.01333333333333333,
+      "avg_timeout_dist": 0
+    },
+    "large(18-22)": {
+      "avg_stay_ratio": 0.27506285247227275,
+      "avg_loop_rate": 0.225,
+      "avg_timeout_dist": 4.5
+    }
+  },
+  "avg_timeout_dist": 4.1,
+  "avg_stay_ratio": 0.2534316125110562,
+  "avg_loop_rate": 0.09787878787878787,
+  "episode": 1900,
+  "type": "training",
+  "source_model": null,
+  "size_stats": {
+    "small(8-12)": {
+      "success": 16,
+      "total": 18,
+      "timeout": 2,
+      "collision": 0
+    },
+    "medium(13-17)": {
+      "success": 9,
+      "total": 10,
+      "timeout": 0,
+      "collision": 1
+    },
+    "large(18-22)": {
+      "success": 9,
+      "total": 12,
+      "timeout": 3,
+      "collision": 0
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "success_rate": 0.725,
+  "successes": 29,
+  "timeouts": 9,
+  "collisions": 2,
+  "total_scenarios": 40,
+  "avg_steps": 8.620689655172415,
+  "avg_step_ratio": 1.02880658436214,
+  "timeout_rate": 0.225,
+  "collision_rate": 0.05,
+  "diag": {
+    "small(8-12)": {
+      "avg_stay_ratio": 0.26298878205128207,
+      "avg_loop_rate": 0.1398995448995449,
+      "avg_timeout_dist": 4.611111111111111
+    }
+  },
+  "avg_timeout_dist": 4.611111111111111,
+  "avg_stay_ratio": 0.26298878205128207,
+  "avg_loop_rate": 0.1398995448995449,
+  "episode": 0,
+  "type": "baseline",
+  "source_model": "results/MyEnv/MyEnv/full_v8/run1/phase_a_astar/checkpoint_ep190/models",
+  "size_stats": {
+    "small(8-12)": {
+      "success": 29,
+      "total": 40,
+      "timeout": 9,
+      "collision": 2
+    }
+  }
+}
